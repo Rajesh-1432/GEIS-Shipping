@@ -1,5 +1,14 @@
-import { useState } from "react";
-import { Table, DatePicker, Input, Button, Card, Modal, message } from "antd";
+import { useEffect, useState } from "react";
+import {
+  Table,
+  DatePicker,
+  Input,
+  Button,
+  Card,
+  Modal,
+  message,
+  Radio,
+} from "antd";
 import {
   AuditOutlined,
   DiffOutlined,
@@ -8,9 +17,134 @@ import {
   FormOutlined,
 } from "@ant-design/icons";
 import { ArrowUpDown } from "lucide-react";
-
+ 
+const data = [
+  {
+    key: "1",
+    sosto: "150085599",
+    soline: "SOLine1",
+    poline: "211000000145",
+    delyline: "DelyLine1",
+    material: "THJK436300WLX",
+    desc: "EXPORT CIRCUIT BREAKER",
+    delyqty: 10,
+    pickqty: 20,
+  },
+  {
+    key: "2",
+    sosto: "1000077718",
+    soline: "SOLine2",
+    poline: "211000000145",
+    delyline: "DelyLine2",
+    material: "THJK436300WLX",
+    desc: "EXPORT CIRCUIT BREAKER",
+    delyqty: 15,
+    pickqty: 25,
+  },
+  {
+    key: "3",
+    sosto: "150085599",
+    soline: "SOLine3",
+    poline: "211000000145",
+    delyline: "DelyLine1",
+    material: "THJK436300WLX",
+    desc: "EXPORT CIRCUIT BREAKER",
+    delyqty: 10,
+    pickqty: 20,
+  },
+  {
+    key: "4",
+    sosto: "1000077718",
+    soline: "SOLine2",
+    poline: "211000000145",
+    delyline: "DelyLine2",
+    material: "THJK436300WLX",
+    desc: "EXPORT CIRCUIT BREAKER",
+    delyqty: 15,
+    pickqty: 25,
+  },
+  {
+    key: "5",
+    sosto: "150085599",
+    soline: "SOLine1",
+    poline: "211000000145",
+    delyline: "DelyLine1",
+    material: "THJK436300WLX",
+    desc: "EXPORT CIRCUIT BREAKER",
+    delyqty: 10,
+    pickqty: 20,
+  },
+  {
+    key: "6",
+    sosto: "1000077718",
+    soline: "SOLine2",
+    poline: "211000000145",
+    delyline: "DelyLine2",
+    material: "THJK436300WLX",
+    desc: "EXPORT CIRCUIT BREAKER",
+    delyqty: 15,
+    pickqty: 25,
+  },
+  // {
+  //   key: "7",
+  //   sosto: "150085599",
+  //   soline: "SOLine1",
+  //   poline: "211000000145",
+  //   delyline: "DelyLine1",
+  //   material: "THJK436300WLX",
+  //   desc: "EXPORT CIRCUIT BREAKER",
+  //   delyqty: 10,
+  //   pickqty: 20,
+  // },
+  {
+    key: "8",
+    sosto: "1000077718",
+    soline: "SOLine2",
+    poline: "211000000145",
+    delyline: "DelyLine2",
+    material: "THJK436300WLX",
+    desc: "EXPORT CIRCUIT BREAKER",
+    delyqty: 15,
+    pickqty: 25,
+  },
+  // {
+  //   key: "9",
+  //   sosto: "150085599",
+  //   soline: "SOLine1",
+  //   poline: "211000000145",
+  //   delyline: "DelyLine1",
+  //   material: "THJK436300WLX",
+  //   desc: "EXPORT CIRCUIT BREAKER",
+  //   delyqty: 10,
+  //   pickqty: 20,
+  // },
+  {
+    key: "10",
+    sosto: "1000077718",
+    soline: "SOLine2",
+    poline: "211000000145",
+    delyline: "DelyLine2",
+    material: "THJK436300WLX",
+    desc: "EXPORT CIRCUIT BREAKER",
+    delyqty: 15,
+    pickqty: 25,
+  },
+];
+ 
 const Home = () => {
-  const [modalVisible, setModalVisible] = useState(false); // Step 2
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isShipModalOpen, setIsShipModalOpen] = useState(false);
+  const [isShipFedexModalOpen, setIsShipFedexModalOpen] = useState(false);
+ 
+  const [value, setValue] = useState(1);
+  const [delivery, setDelivery] = useState("");
+ 
+  const [serviceType, setServiceType] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState("0");
+ 
+  // Step 2
+  // Step 2
   const [table2Data, setTable2Data] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [recentIds, setRecentIds] = useState([]);
@@ -27,18 +161,18 @@ const Home = () => {
       key: "3",
       hu: "1000077720",
     },
-    {
-      key: "4",
-      hu: "THJK436300WLX",
-    },
-    {
-      key: "5",
-      hu: "THJK436300WLX",
-    },
-    {
-      key: "6",
-      hu: "THJK436300WLX",
-    },
+    // {
+    //   key: "4",
+    //   hu: "THJK436300WLX",
+    // },
+    // {
+    //   key: "5",
+    //   hu: "THJK436300WLX",
+    // },
+    // {
+    //   key: "6",
+    //   hu: "THJK436300WLX",
+    // },
   ]);
   const [table1, setTable1] = useState([
     {
@@ -46,188 +180,79 @@ const Home = () => {
       hu: "1000077718",
       weight: 48,
       uom: "EA",
-      tracking: "Tracking1",
+      tracking: "",
     },
     {
       key: "2",
       hu: "1000077719",
       weight: 43,
       uom: "EA",
-      tracking: "Tracking2",
+      tracking: "",
     },
     {
       key: "3",
       hu: "1000077720",
       weight: 125,
       uom: "EA",
-      tracking: "Tracking1",
+      tracking: "",
     },
-    {
-      key: "4",
-      hu: "THJK436300WLX",
-      weight: 3,
-      uom: "EA",
-      tracking: "Tracking2",
-    },
-    {
-      key: "5",
-      hu: "THJK436300WLX",
-      weight: 2,
-      uom: "EA",
-      tracking: "Tracking1",
-    },
-    {
-      key: "6",
-      hu: "THJK436300WLX",
-      weight: 20,
-      uom: "EA",
-      tracking: "Tracking2",
-    },
+    // {
+    //   key: "4",
+    //   hu: "THJK436300WLX",
+    //   weight: 3,
+    //   uom: "EA",
+    //   tracking: "",
+    // },
+    // {
+    //   key: "5",
+    //   hu: "THJK436300WLX",
+    //   weight: 2,
+    //   uom: "EA",
+    //   tracking: "",
+    // },
+    // {
+    //   key: "6",
+    //   hu: "THJK436300WLX",
+    //   weight: 20,
+    //   uom: "EA",
+    //   tracking: "",
+    // },
     // Add more objects as needed
   ]);
-
+ 
   const [tableData, setTableData] = useState([]);
-
+ 
   const handleInput = (e) => {
     setInputValue(e.target.value);
   };
-
-  const handleAddRow = () => {
-    // Search for a row in your data based on the SO/STO/ETO ID entered
-    const foundRow = dataSource.find((row) => row.sosto === inputValue);
-    if (foundRow) {
-      // Add the found row to the tableData state
-      setTableData([...tableData, foundRow]);
-
-      // Add the entered ID to the recentIds state
-      setRecentIds([
-        inputValue,
-        ...recentIds.filter((id) => id !== inputValue).slice(0, 4),
-      ]); // Limit to 5 recent IDs
-    } else {
-      // If ID is not found, display a message
-      message.error({
-        content: "wrong value!",
-        key,
-        duration: 2,
-      });
-      // You can display a message using a notification or set a state to display a message in your UI
-    }
-    setInputValue(""); // Clear input value after adding row
-  };
-
-  const [dataSource, setDataSource] = useState([
-    {
-      key: "1",
-      sosto: "150085599",
-      soline: "SOLine1",
-      poline: "211000000145",
-      delyline: "DelyLine1",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 10,
-      pickqty: 20,
-    },
-    {
-      key: "2",
-      sosto: "1000077718",
-      soline: "SOLine2",
-      poline: "211000000145",
-      delyline: "DelyLine2",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 15,
-      pickqty: 25,
-    },
-    {
-      key: "3",
-      sosto: "150085599",
-      soline: "SOLine3",
-      poline: "211000000145",
-      delyline: "DelyLine1",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 10,
-      pickqty: 20,
-    },
-    {
-      key: "4",
-      sosto: "1000077718",
-      soline: "SOLine2",
-      poline: "211000000145",
-      delyline: "DelyLine2",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 15,
-      pickqty: 25,
-    },
-    {
-      key: "5",
-      sosto: "150085599",
-      soline: "SOLine1",
-      poline: "211000000145",
-      delyline: "DelyLine1",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 10,
-      pickqty: 20,
-    },
-    {
-      key: "6",
-      sosto: "1000077718",
-      soline: "SOLine2",
-      poline: "211000000145",
-      delyline: "DelyLine2",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 15,
-      pickqty: 25,
-    },
-    {
-      key: "7",
-      sosto: "150085599",
-      soline: "SOLine1",
-      poline: "211000000145",
-      delyline: "DelyLine1",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 10,
-      pickqty: 20,
-    },
-    {
-      key: "8",
-      sosto: "1000077718",
-      soline: "SOLine2",
-      poline: "211000000145",
-      delyline: "DelyLine2",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 15,
-      pickqty: 25,
-    },
-    {
-      key: "9",
-      sosto: "150085599",
-      soline: "SOLine1",
-      poline: "211000000145",
-      delyline: "DelyLine1",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 10,
-      pickqty: 20,
-    },
-    {
-      key: "10",
-      sosto: "1000077718",
-      soline: "SOLine2",
-      poline: "211000000145",
-      delyline: "DelyLine2",
-      material: "THJK436300WLX",
-      desc: "EXPORT CIRCUIT BREAKER",
-      delyqty: 15,
-      pickqty: 25,
-    },
-  ]);
+ 
+  // const handleAddRow = () => {
+  //   // Search for a row in your data based on the SO/STO/ETO ID entered
+  //   const foundRow = dataSource.find((row) => row.sosto === inputValue);
+  //   if (foundRow) {
+  //     // Add the found row to the tableData state
+  //     setTableData([...tableData, foundRow]);
+ 
+  //     // Add the entered ID to the recentIds state
+  //     setRecentIds([
+  //       inputValue,
+  //       ...recentIds.filter((id) => id !== inputValue).slice(0, 4),
+  //     ]); // Limit to 5 recent IDs
+  //   } else {
+  //     // If ID is not found, display a message
+  //     message.error({
+  //       content: "wrong value!",
+  //       key,
+  //       duration: 2,
+  //     });
+  //     // You can display a message using a notification or set a state to display a message in your UI
+  //   }
+  //   setInputValue(""); // Clear input value after adding row
+  // };
+ 
+  const [dataSource, setDataSource] = useState([]);
+  const [filterData, setFilterData] = useState([]);
+ 
   const handleInputChange = (e, key, dataIndex) => {
     const newData = [...dataSource];
     const index = newData.findIndex((item) => key === item.key);
@@ -236,12 +261,12 @@ const Home = () => {
       setDataSource(newData);
     }
   };
-
+ 
   // Step 3: Function to open modal
   const showModal = () => {
     setModalVisible(true);
   };
-
+ 
   // Step 3: Function to close modal
   const handleCancel = () => {
     setModalVisible(false);
@@ -345,7 +370,7 @@ const Home = () => {
       ),
     },
   ];
-
+ 
   const packColumn = [
     {
       title: "HU",
@@ -421,26 +446,27 @@ const Home = () => {
     },
     // Add more objects as needed
   ];
-
+ 
   const handleRowClick = (record) => {
     setTable2Data(table2);
     setModalVisible(false);
   };
-
+ 
   const key = "updatable";
   const handleCreateShpmnt = () => {
-    message.loading({
-      content: "Loading...",
-      key,
-    });
-    setTimeout(() => {
-      message.success({
-        content: "Updated!",
-        key,
-        duration: 2,
-      });
-    }, 1000);
+    if (inputValue == "150085599") {
+      const filter = data.filter((d) => d.sosto == "150085599");
+      setFilterData(filter);
+      setDelivery("801963700");
+    } else {
+      console.log("4700003451");
+    }
   };
+ 
+  useEffect(() => {
+    setDataSource(filterData);
+  }, [filterData]);
+ 
   const onDelivered = () => {
     message.loading({
       content: "Loading...",
@@ -474,18 +500,18 @@ const Home = () => {
     input4: "",
     input5: "",
   });
-
+ 
   // Function to handle clicking the "SHIP" button
   const handleShipClick = () => {
     // Logic to fill the input fields with default values
     // You can modify this logic as per your requirement
-    setInputValues({
-      input1: "545154",
-      input2: "FLIGHT",
-      input3: "SE",
-      input4: "45102E",
-      input5: "IND",
-    });
+    // setInputValues({
+    //   input1: "545154",
+    //   input2: "FLIGHT",
+    //   input3: "SE",
+    //   input4: "45102E",
+    //   input5: "IND",
+    // });
   };
   return (
     <div
@@ -495,12 +521,157 @@ const Home = () => {
         display: "flex",
       }}
     >
+      <Modal
+        title="Carrier Selection"
+        open={isShipModalOpen}
+        onOk={() => {
+          console.log("Modal opened");
+        }}
+        onCancel={() => setIsShipModalOpen(false)}
+        width={300}
+        footer={null}
+      >
+        <div className="flex items-center justify-between w-full">
+          <Radio.Group
+            className="flex flex-col items-start justify-between gap-4"
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          >
+            <Radio value={1}>LTL</Radio>
+            <Radio value={2}>Fedex</Radio>
+          </Radio.Group>
+          <div className="flex flex-col items-start justify-between w-full gap-2">
+            <Button
+              onClick={() => setIsShipFedexModalOpen(false)}
+              className="w-full"
+            >
+              Ship LTL
+            </Button>
+            <Button
+              onClick={() => {
+                setIsShipModalOpen(false);
+                setIsShipFedexModalOpen(true);
+              }}
+              className="w-full"
+            >
+              Ship Fedex
+            </Button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        title="Fedex Service"
+        open={isShipFedexModalOpen}
+        onOk={() => {
+          console.log("Modal opened");
+        }}
+        onCancel={() => setIsShipFedexModalOpen(false)}
+        width={300}
+        footer={null}
+      >
+        <div className="flex flex-col items-center justify-between w-full">
+          {[
+            "GROUND",
+            "NEXT DAY AIR",
+            "SECOND DAY AIR",
+            "THIRD DAY AIR",
+            "PARCEL",
+          ].map((type) => (
+            <div
+              key={type}
+              className={`${
+                serviceType === type ? "bg-blue-500" : ""
+              } cursor-pointer p-[2px] rounded-lg`}
+              onClick={() => setServiceType(type)}
+            >
+              {type}
+            </div>
+          ))}
+          <Button
+            onClick={() => {
+              setIsShipFedexModalOpen(false);
+              setTimeout(() => {
+                setMessage("1");
+ 
+                setShowMessage(true);
+              }, 1000);
+            }}
+            className="w-full mt-4"
+          >
+            Service
+          </Button>
+        </div>
+      </Modal>
+      <Modal
+        title="Fedex Service"
+        open={showMessage}
+        footer={null}
+        onCancel={() => setShowMessage(false)}
+        width={200}
+      >
+        <div className="flex flex-col items-center justify-between w-full">
+          {message === "1" && <div>Call to fedex sever initiated</div>}
+          {message === "2" && "Fedex label printed"}
+          {message === "3" && "Post Good issued"}
+        </div>
+        <Button
+          className="w-full mt-4"
+          onClick={() => {
+            console.log("message: ", message);
+            if (message === "3") {
+              setInputValues({
+                input1: "545154",
+                input2: serviceType,
+                input3: "SE",
+                input4: "45102E",
+                input5: "IND",
+              });
+ 
+              setTable2Data([
+                {
+                  key: "1",
+                  hu: "1000077718",
+                  weight: 48,
+                  uom: "EA",
+                  tracking: "73456897213",
+                },
+                {
+                  key: "2",
+                  hu: "1000077719",
+                  weight: 43,
+                  uom: "EA",
+                  tracking: "73456897213",
+                },
+                {
+                  key: "3",
+                  hu: "1000077720",
+                  weight: 125,
+                  uom: "EA",
+                  tracking: "73456897213",
+                },
+              ]);
+ 
+              setShowMessage(false);
+              return;
+            }
+ 
+            setShowMessage(false);
+            setTimeout(() => {
+              setShowMessage(true);
+              message == "1" && setMessage("2");
+              message == "2" && setMessage("3");
+            }, 1000);
+          }}
+        >
+          OK
+        </Button>
+      </Modal>
       <div style={{ flex: 1 }}>
         <div
           style={{
             // padding: 2,
             fontSize: 34,
-
+ 
             color: "#117ca7",
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
             textAlign: "start",
@@ -521,7 +692,7 @@ const Home = () => {
               padding: 4,
               display: "flex",
               flexDirection: "row",
-
+ 
               gap: 35,
               alignItems: "center",
             }}
@@ -552,7 +723,7 @@ const Home = () => {
                 style={{ marginLeft: 8 }}
                 value={inputValue}
                 onChange={handleInput}
-                onPressEnter={handleAddRow}
+                // onPressEnter={handleAddRow}
               />
             </span>
             <span
@@ -566,7 +737,11 @@ const Home = () => {
               }}
             >
               Delivery{" "}
-              <Input placeholder="enter here" style={{ marginLeft: 8 }} />
+              <Input
+                value={delivery}
+                placeholder="enter here"
+                style={{ marginLeft: 8 }}
+              />
             </span>
             <span style={{ marginLeft: "10%" }}>
               <Button
@@ -679,9 +854,9 @@ const Home = () => {
                 display: "flex",
                 flexDirection: "column",
                 width: "65%",
-
+ 
                 gap: 20,
-
+ 
                 // bacEAroundColor: "red",
                 padding: 15,
               }}
@@ -698,10 +873,11 @@ const Home = () => {
                 {" "}
                 {/* table 1 */}
                 <Table
-                  dataSource={tableData}
+                  size="small"
+                  dataSource={dataSource}
                   columns={columns}
                   pagination={false}
-                  scroll={{ y: 250 }}
+                  scroll={{ y: 300 }}
                 />
               </span>
               <div
@@ -709,7 +885,7 @@ const Home = () => {
                   display: "flex",
                   justifyContent: "space-around",
                   padding: 2,
-
+ 
                   height: "295px",
                 }}
               >
@@ -796,7 +972,7 @@ const Home = () => {
                   >
                     <div style={{ marginTop: "22%" }}>
                       <Button
-                        onClick={handleShipClick}
+                        onClick={() => setIsShipModalOpen(true)}
                         style={{ backgroundColor: "" }}
                       >
                         SHIP <FileAddOutlined />
@@ -940,7 +1116,7 @@ const Home = () => {
             <span
               style={{
                 width: "32%",
-
+ 
                 display: "flex",
                 flexDirection: "column",
                 gap: 14,
@@ -966,7 +1142,7 @@ const Home = () => {
                   scroll={{ y: 100 }}
                 />
               </span>
-
+ 
               <Card
                 style={{
                   height: "200px",
@@ -985,7 +1161,7 @@ const Home = () => {
                       {" "}
                       <div>Shipping Address</div>
                     </div>
-
+ 
                     <div
                       style={{
                         borderLeft: "2px solid #ccc",
@@ -999,13 +1175,9 @@ const Home = () => {
                 </div>
                 {table2Data.length > 0 && (
                   <div>
-                    <span>Hyderabad</span>
-                    <span
-                      style={{
-                        marginLeft: 200,
-                      }}
-                    >
-                      Delhi
+                    <span>
+                      Gexpro – Woodward Lincoln Campus, Attn: Jay Keller, 5303
+                      East 47th Ave STE A, Denver CO 80216, USA
                     </span>
                   </div>
                 )}
@@ -1032,7 +1204,7 @@ const Home = () => {
                       2. Domestic delivery: Standard (3-5 business days),
                       Expedited (1-3 business days), Overnight (1 business day).
                     </div>
-
+ 
                     <div>
                       3. International delivery: Standard (7-21 business days),
                       Expedited (5-10 business days).
@@ -1055,5 +1227,5 @@ const Home = () => {
     </div>
   );
 };
-
+ 
 export default Home;
