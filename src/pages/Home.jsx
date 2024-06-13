@@ -17,7 +17,7 @@ import {
   FormOutlined,
 } from "@ant-design/icons";
 import { ArrowUpDown } from "lucide-react";
- 
+
 const data = [
   {
     key: "1",
@@ -130,19 +130,19 @@ const data = [
     pickqty: 25,
   },
 ];
- 
+
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isShipModalOpen, setIsShipModalOpen] = useState(false);
   const [isShipFedexModalOpen, setIsShipFedexModalOpen] = useState(false);
- 
+
   const [value, setValue] = useState(1);
   const [delivery, setDelivery] = useState("");
- 
+
   const [serviceType, setServiceType] = useState("");
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState("0");
- 
+
   // Step 2
   // Step 2
   const [table2Data, setTable2Data] = useState([]);
@@ -219,20 +219,20 @@ const Home = () => {
     // },
     // Add more objects as needed
   ]);
- 
+
   const [tableData, setTableData] = useState([]);
- 
+
   const handleInput = (e) => {
     setInputValue(e.target.value);
   };
- 
+
   // const handleAddRow = () => {
   //   // Search for a row in your data based on the SO/STO/ETO ID entered
   //   const foundRow = dataSource.find((row) => row.sosto === inputValue);
   //   if (foundRow) {
   //     // Add the found row to the tableData state
   //     setTableData([...tableData, foundRow]);
- 
+
   //     // Add the entered ID to the recentIds state
   //     setRecentIds([
   //       inputValue,
@@ -249,10 +249,10 @@ const Home = () => {
   //   }
   //   setInputValue(""); // Clear input value after adding row
   // };
- 
+
   const [dataSource, setDataSource] = useState([]);
   const [filterData, setFilterData] = useState([]);
- 
+
   const handleInputChange = (e, key, dataIndex) => {
     const newData = [...dataSource];
     const index = newData.findIndex((item) => key === item.key);
@@ -261,12 +261,12 @@ const Home = () => {
       setDataSource(newData);
     }
   };
- 
+
   // Step 3: Function to open modal
   const showModal = () => {
     setModalVisible(true);
   };
- 
+
   // Step 3: Function to close modal
   const handleCancel = () => {
     setModalVisible(false);
@@ -370,7 +370,7 @@ const Home = () => {
       ),
     },
   ];
- 
+
   const packColumn = [
     {
       title: "HU",
@@ -446,12 +446,12 @@ const Home = () => {
     },
     // Add more objects as needed
   ];
- 
+
   const handleRowClick = (record) => {
     setTable2Data(table2);
     setModalVisible(false);
   };
- 
+
   const key = "updatable";
   const handleCreateShpmnt = () => {
     if (inputValue == "150085599") {
@@ -462,11 +462,11 @@ const Home = () => {
       console.log("4700003451");
     }
   };
- 
+
   useEffect(() => {
     setDataSource(filterData);
   }, [filterData]);
- 
+
   const onDelivered = () => {
     message.loading({
       content: "Loading...",
@@ -500,7 +500,7 @@ const Home = () => {
     input4: "",
     input5: "",
   });
- 
+
   // Function to handle clicking the "SHIP" button
   const handleShipClick = () => {
     // Logic to fill the input fields with default values
@@ -592,7 +592,7 @@ const Home = () => {
               setIsShipFedexModalOpen(false);
               setTimeout(() => {
                 setMessage("1");
- 
+
                 setShowMessage(true);
               }, 1000);
             }}
@@ -626,7 +626,7 @@ const Home = () => {
                 input4: "45102E",
                 input5: "IND",
               });
- 
+
               setTable2Data([
                 {
                   key: "1",
@@ -650,11 +650,11 @@ const Home = () => {
                   tracking: "73456897213",
                 },
               ]);
- 
+
               setShowMessage(false);
               return;
             }
- 
+
             setShowMessage(false);
             setTimeout(() => {
               setShowMessage(true);
@@ -671,7 +671,7 @@ const Home = () => {
           style={{
             // padding: 2,
             fontSize: 34,
- 
+
             color: "#117ca7",
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
             textAlign: "start",
@@ -692,7 +692,7 @@ const Home = () => {
               padding: 4,
               display: "flex",
               flexDirection: "row",
- 
+
               gap: 35,
               alignItems: "center",
             }}
@@ -743,7 +743,30 @@ const Home = () => {
                 style={{ marginLeft: 8 }}
               />
             </span>
-            <span style={{ marginLeft: "10%" }}>
+            <span
+              style={{
+                display: "flex",
+                gap: 10,
+                marginLeft: "10%",
+              }}
+            >
+              <Button
+                style={{
+                  color: "white",
+                  backgroundColor: "#117ca7",
+                  // width: "90%",
+                }}
+                onClick={() => {
+                  setTable2Data([]);
+                  setFilterData([]);
+                  setInputValue("");
+                  setInputValues([]);
+                  setDelivery("");
+                }}
+              >
+                Refresh
+              </Button>
+
               <Button
                 style={{
                   color: "white",
@@ -823,21 +846,10 @@ const Home = () => {
                 Create Shipment <FileAddOutlined style={{ color: "white" }} />
               </Button>
               <Button
-                onClick={onDelivered}
+                onClick={() => setIsShipModalOpen(true)}
                 style={{ color: "white", backgroundColor: "#0f7d1f" }}
               >
-                Deliveries <FormOutlined style={{ color: "white" }} />
-              </Button>
-              <Button
-                onClick={onComplete}
-                style={{
-                  color: "white",
-                  backgroundColor: "#0f7d1f",
-                  // width: 18,
-                }}
-              >
-                Shipment Complete
-                <FileDoneOutlined style={{ color: "white" }} />
+                SHIP <FileAddOutlined />
               </Button>
             </span>
           </div>
@@ -854,9 +866,9 @@ const Home = () => {
                 display: "flex",
                 flexDirection: "column",
                 width: "65%",
- 
+
                 gap: 20,
- 
+
                 // bacEAroundColor: "red",
                 padding: 15,
               }}
@@ -885,7 +897,7 @@ const Home = () => {
                   display: "flex",
                   justifyContent: "space-around",
                   padding: 2,
- 
+
                   height: "295px",
                 }}
               >
@@ -970,14 +982,7 @@ const Home = () => {
                       justifyContent: "space-between",
                     }}
                   >
-                    <div style={{ marginTop: "22%" }}>
-                      <Button
-                        onClick={() => setIsShipModalOpen(true)}
-                        style={{ backgroundColor: "" }}
-                      >
-                        SHIP <FileAddOutlined />
-                      </Button>
-                    </div>
+                    <div style={{ marginTop: "22%" }}></div>
                     <div
                       style={{
                         marginTop: 40,
@@ -1116,7 +1121,7 @@ const Home = () => {
             <span
               style={{
                 width: "32%",
- 
+
                 display: "flex",
                 flexDirection: "column",
                 gap: 14,
@@ -1142,7 +1147,7 @@ const Home = () => {
                   scroll={{ y: 100 }}
                 />
               </span>
- 
+
               <Card
                 style={{
                   height: "200px",
@@ -1161,7 +1166,7 @@ const Home = () => {
                       {" "}
                       <div>Shipping Address</div>
                     </div>
- 
+
                     <div
                       style={{
                         borderLeft: "2px solid #ccc",
@@ -1204,7 +1209,7 @@ const Home = () => {
                       2. Domestic delivery: Standard (3-5 business days),
                       Expedited (1-3 business days), Overnight (1 business day).
                     </div>
- 
+
                     <div>
                       3. International delivery: Standard (7-21 business days),
                       Expedited (5-10 business days).
@@ -1227,5 +1232,5 @@ const Home = () => {
     </div>
   );
 };
- 
+
 export default Home;
