@@ -16,7 +16,7 @@ import {
   FileDoneOutlined,
   FormOutlined,
 } from "@ant-design/icons";
-import { ArrowUpDown } from "lucide-react";
+import PackUnpackModal from "./PackModal";
 
 const data = [
   {
@@ -143,89 +143,18 @@ const Home = () => {
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState("0");
 
-  // Step 2
-  // Step 2
-  const [table2Data, setTable2Data] = useState([]);
+  const [dataSource, setDataSource] = useState([]);
+  const [filterData, setFilterData] = useState([]);
+  const [shippingPackTable, setShippingPackTable] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [recentIds, setRecentIds] = useState([]);
-  const [table2, setTable2] = useState([
-    {
-      key: "1",
-      hu: "1000077718",
-    },
-    {
-      key: "2",
-      hu: "1000077719",
-    },
-    {
-      key: "3",
-      hu: "1000077720",
-    },
-    // {
-    //   key: "4",
-    //   hu: "THJK436300WLX",
-    // },
-    // {
-    //   key: "5",
-    //   hu: "THJK436300WLX",
-    // },
-    // {
-    //   key: "6",
-    //   hu: "THJK436300WLX",
-    // },
-  ]);
-  const [table1, setTable1] = useState([
-    {
-      key: "1",
-      hu: "1000077718",
-      weight: 48,
-      uom: "EA",
-      tracking: "",
-    },
-    {
-      key: "2",
-      hu: "1000077719",
-      weight: 43,
-      uom: "EA",
-      tracking: "",
-    },
-    {
-      key: "3",
-      hu: "1000077720",
-      weight: 125,
-      uom: "EA",
-      tracking: "",
-    },
-    // {
-    //   key: "4",
-    //   hu: "THJK436300WLX",
-    //   weight: 3,
-    //   uom: "EA",
-    //   tracking: "",
-    // },
-    // {
-    //   key: "5",
-    //   hu: "THJK436300WLX",
-    //   weight: 2,
-    //   uom: "EA",
-    //   tracking: "",
-    // },
-    // {
-    //   key: "6",
-    //   hu: "THJK436300WLX",
-    //   weight: 20,
-    //   uom: "EA",
-    //   tracking: "",
-    // },
-    // Add more objects as needed
-  ]);
-
-  const [tableData, setTableData] = useState([]);
-
+  const [packTableDataFromModal, setPackTableDataFromModal] = useState([]);
   const handleInput = (e) => {
     setInputValue(e.target.value);
   };
-
+  const handleGetPackData = (packData) => {
+    setPackTableDataFromModal(packData);
+    console.log("Pack table data received in parent:", packData);
+  };
   // const handleAddRow = () => {
   //   // Search for a row in your data based on the SO/STO/ETO ID entered
   //   const foundRow = dataSource.find((row) => row.sosto === inputValue);
@@ -250,9 +179,6 @@ const Home = () => {
   //   setInputValue(""); // Clear input value after adding row
   // };
 
-  const [dataSource, setDataSource] = useState([]);
-  const [filterData, setFilterData] = useState([]);
-
   const handleInputChange = (e, key, dataIndex) => {
     const newData = [...dataSource];
     const index = newData.findIndex((item) => key === item.key);
@@ -263,14 +189,7 @@ const Home = () => {
   };
 
   // Step 3: Function to open modal
-  const showModal = () => {
-    setModalVisible(true);
-  };
 
-  // Step 3: Function to close modal
-  const handleCancel = () => {
-    setModalVisible(false);
-  };
   const columns = [
     {
       title: "SO/STO/ETO",
@@ -371,7 +290,7 @@ const Home = () => {
     },
   ];
 
-  const packColumn = [
+  const packTableColumns = [
     {
       title: "HU",
       dataIndex: "hu",
@@ -401,55 +320,44 @@ const Home = () => {
     //   ),
     // },
   ];
-  const packData = [
+  const packTableData = [
     {
       key: "1",
       hu: "1000077718",
-      weight: 48,
-      uom: "EA",
-      tracking: "Tracking1",
+      desc: "CARTON US",
+      weight: 50,
+      loadingWeight: 48,
+      allWeight: "",
+      tareWeight: 2,
+      uom: "LB",
+      volume: 1.57,
     },
     {
       key: "2",
       hu: "1000077719",
+      desc: "CARTON US",
       weight: 43,
-      uom: "EA",
-      tracking: "Tracking2",
+      loadingWeight: 120,
+      allWeight: "",
+      tareWeight: 3,
+      uom: "LB",
+      volume: 1.47,
     },
     {
       key: "3",
       hu: "1000077720",
+      desc: "CARTON US",
       weight: 125,
-      uom: "EA",
-      tracking: "Tracking1",
+      loadingWeight: 120,
+      allWeight: "",
+      tareWeight: 5,
+      uom: "LB",
+      volume: 1.87,
     },
-    {
-      key: "4",
-      hu: "THJK436300WLX",
-      weight: 3,
-      uom: "EA",
-      tracking: "Tracking2",
-    },
-    {
-      key: "5",
-      hu: "THJK436300WLX",
-      weight: 2,
-      uom: "EA",
-      tracking: "Tracking1",
-    },
-    {
-      key: "6",
-      hu: "THJK436300WLX",
-      weight: 20,
-      uom: "EA",
-      tracking: "Tracking2",
-    },
-    // Add more objects as needed
   ];
-
   const handleRowClick = (record) => {
-    setTable2Data(table2);
     setModalVisible(false);
+    setShippingPackTable(packTableData);
   };
 
   const key = "updatable";
@@ -512,6 +420,14 @@ const Home = () => {
     //   input4: "45102E",
     //   input5: "IND",
     // });
+  };
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  // Step 3: Function to close modal
+  const handleCancel = () => {
+    setModalVisible(false);
   };
   return (
     <div
@@ -793,42 +709,9 @@ const Home = () => {
                     Save
                   </Button>,
                 ]}
-                width={"50%"}
+                width={"70%"}
               >
-                {/* modal table */}
-                <Table
-                  size="small"
-                  dataSource={table2}
-                  columns={packColumn}
-                  pagination={false}
-                  // onRow={(record) => ({
-                  //   onClick: () => {
-                  //     handleRowClick(record);
-                  //   },
-                  // })}
-                  style={{ padding: "15px" }}
-                  bordered
-                />
-                <Button
-                  onClick={() => {
-                    setTable2(table1);
-                    setTable1([]);
-                  }}
-                  icon={<ArrowUpDown />}
-                />
-                <Table
-                  size="small"
-                  dataSource={table1}
-                  columns={packColumn}
-                  pagination={false}
-                  // onRow={(record) => ({
-                  //   onClick: () => {
-                  //     handleRowClick(record);
-                  //   },
-                  // })}
-                  style={{ padding: "15px" }}
-                  bordered
-                />
+                <PackUnpackModal getPackTable={handleGetPackData} />
               </Modal>
             </span>
             <span
@@ -1141,8 +1024,8 @@ const Home = () => {
                 {" "}
                 {/* table 2 */}
                 <Table
-                  dataSource={table2Data}
-                  columns={packColumn}
+                  dataSource={shippingPackTable}
+                  columns={packTableColumns}
                   pagination={false}
                   scroll={{ y: 100 }}
                 />
@@ -1178,7 +1061,7 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-                {table2Data.length > 0 && (
+                {shippingPackTable.length > 0 && (
                   <div>
                     <span>
                       Gexpro – Woodward Lincoln Campus, Attn: Jay Keller, 5303
@@ -1202,7 +1085,7 @@ const Home = () => {
                 >
                   Shipping Instruction
                 </div>
-                {table2Data.length > 0 && (
+                {shippingPackTable.length > 0 && (
                   <div className="flex flex-col gap-3">
                     <div>1. Orders are processed within 1-2 business days.</div>
                     <div>
