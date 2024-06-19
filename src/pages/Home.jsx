@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react";
-import {
-  Table,
-  DatePicker,
-  Input,
-  Button,
-  Card,
-  Modal,
-  message,
-  Radio,
-} from "antd";
 import {
   AuditOutlined,
   DiffOutlined,
   FileAddOutlined,
-  FileDoneOutlined,
-  FormOutlined,
 } from "@ant-design/icons";
+import { Button, Card, DatePicker, Input, Modal, Radio, Table } from "antd";
+import { useEffect, useState } from "react";
 import PackUnpackModal from "./PackModal";
+import moment from "moment";
 
 const data = [
   {
@@ -363,8 +353,8 @@ const Home = () => {
   const key = "updatable";
   const handleCreateShpmnt = () => {
     if (inputValue == "150085599") {
-      const filter = data.filter((d) => d.sosto == "150085599");
-      setFilterData(filter);
+      const filter = data.filter((d) => d.sosto == "150085599")[0];
+      setFilterData([filter]);
       setDelivery("801963700");
     } else {
       console.log("4700003451");
@@ -536,7 +526,7 @@ const Home = () => {
             console.log("message: ", message);
             if (message === "3") {
               setInputValues({
-                input1: "545154",
+                input1: "045154",
                 input2: serviceType,
                 input3: "SE",
                 input4: "45102E",
@@ -621,7 +611,8 @@ const Home = () => {
                   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
               }}
             >
-              Select Date <DatePicker style={{ marginLeft: 8 }} />
+              Select Date{" "}
+              <DatePicker defaultValue={moment()} style={{ marginLeft: 8 }} />
             </span>
             <span
               style={{
@@ -639,7 +630,7 @@ const Home = () => {
                 style={{ marginLeft: 8 }}
                 value={inputValue}
                 onChange={handleInput}
-                // onPressEnter={handleAddRow}
+                onPressEnter={handleCreateShpmnt}
               />
             </span>
             <span
@@ -663,7 +654,6 @@ const Home = () => {
               style={{
                 display: "flex",
                 gap: 10,
-                marginLeft: "10%",
               }}
             >
               <Button
@@ -711,7 +701,10 @@ const Home = () => {
                 ]}
                 width={"70%"}
               >
-                <PackUnpackModal getPackTable={handleGetPackData} />
+                <PackUnpackModal
+                  getPackTable={handleGetPackData}
+                  setShippingPackTable={setShippingPackTable}
+                />
               </Modal>
             </span>
             <span
@@ -727,12 +720,6 @@ const Home = () => {
                 style={{ color: "white", backgroundColor: "#0f7d1f" }}
               >
                 Create Shipment <FileAddOutlined style={{ color: "white" }} />
-              </Button>
-              <Button
-                onClick={() => setIsShipModalOpen(true)}
-                style={{ color: "white", backgroundColor: "#0f7d1f" }}
-              >
-                SHIP <FileAddOutlined />
               </Button>
             </span>
           </div>
@@ -819,7 +806,7 @@ const Home = () => {
                       >
                         <label htmlFor="input1">Spl.Proc.Indi</label>{" "}
                         {/* Added label */}
-                        <Input id="input1"></Input>{" "}
+                        <Input value={"Z04"} id="input1"></Input>{" "}
                         {/* Added id for linking with label */}
                       </div>
                       <div
@@ -850,14 +837,24 @@ const Home = () => {
                   }}
                 >
                   <div
+                    className="flex items-center justify-between"
                     style={{
                       fontSize: "15px",
                       fontWeight: 600,
                       borderBottom: "2px solid #1890ff",
                     }}
                   >
-                    Shipping
+                    <div>Shipping</div>
+                    <Button
+                      icon={<FileAddOutlined />}
+                      size="small"
+                      onClick={() => setIsShipModalOpen(true)}
+                      style={{ color: "white", backgroundColor: "#0f7d1f" }}
+                    >
+                      SHIP
+                    </Button>
                   </div>
+
                   <div
                     style={{
                       display: "flex",
