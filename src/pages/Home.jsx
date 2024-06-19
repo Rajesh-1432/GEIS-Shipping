@@ -136,6 +136,8 @@ const Home = () => {
   const [dataSource, setDataSource] = useState([]);
   const [filterData, setFilterData] = useState([]);
   const [shippingPackTable, setShippingPackTable] = useState([]);
+  const [temp, setTemp] = useState([]);
+
   const [inputValue, setInputValue] = useState("");
   const [packTableDataFromModal, setPackTableDataFromModal] = useState([]);
   const handleInput = (e) => {
@@ -289,13 +291,13 @@ const Home = () => {
     },
     {
       title: "Weight",
-      dataIndex: "weight",
-      key: "weight",
+      dataIndex: "totalWeight",
+      key: "totalWeight",
     },
     {
       title: "UoM",
-      dataIndex: "uom",
-      key: "uom",
+      dataIndex: "unit",
+      key: "unit",
     },
     {
       title: "Tracking",
@@ -347,7 +349,7 @@ const Home = () => {
   ];
   const handleRowClick = (record) => {
     setModalVisible(false);
-    setShippingPackTable(packTableData);
+    setShippingPackTable(temp);
   };
 
   const key = "updatable";
@@ -645,7 +647,7 @@ const Home = () => {
                   // width: "90%",
                 }}
                 onClick={() => {
-                  setTable2Data([]);
+                  setShippingPackTable([]);
                   setFilterData([]);
                   setInputValue("");
                   setInputValues([]);
@@ -685,7 +687,7 @@ const Home = () => {
               >
                 <PackUnpackModal
                   getPackTable={handleGetPackData}
-                  setShippingPackTable={setShippingPackTable}
+                  setTemp={setTemp}
                 />
               </Modal>
             </span>

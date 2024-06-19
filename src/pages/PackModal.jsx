@@ -1,7 +1,7 @@
 import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
-const PackUnpackModal = ({ getPackTable, setShippingPackTable }) => {
+const PackUnpackModal = ({ getPackTable, setTemp }) => {
   const [showPackData, setShowPackData] = useState(false);
   const [selectedRowKeys1, setSelectedRowKeys1] = useState([]);
   console.log("selectedRowKeys1: ", selectedRowKeys1);
@@ -85,7 +85,6 @@ const PackUnpackModal = ({ getPackTable, setShippingPackTable }) => {
       desc: "EXPORT CIRCUIT BREAKER #N/A",
     },
   ]);
-  console.log("packTableData: ", packTableData);
 
   const packColumns = [
     {
@@ -194,18 +193,23 @@ const PackUnpackModal = ({ getPackTable, setShippingPackTable }) => {
 
   useEffect(() => {
     getPackTable(packTableData);
-  }, []);
+    setTemp(packTableData);
+  }, [packTableData]);
 
   const handlePackClick = () => {
     const selectedUnPackItems = unpackTableData.filter((item) =>
       selectedRowKeys2.includes(item.key),
     );
 
-    const selectedPackItems = packTableData.filter((item) =>
+    const selectedPackItem = packTableData.find((item) =>
       selectedRowKeys1.includes(item.key),
     );
 
-    if (selectedUnPackItems.length > 0 && selectedUnPackItems) {
+    if (
+      selectedUnPackItems.length > 0 &&
+      selectedUnPackItems &&
+      selectedPackItem
+    ) {
       const totalQty = selectedUnPackItems.reduce(
         (acc, item) => acc + item.totalQty,
         0,
@@ -215,22 +219,17 @@ const PackUnpackModal = ({ getPackTable, setShippingPackTable }) => {
         0,
       );
 
-      setPackTableData((prevPackTableData) =>
-        prevPackTableData.map((item) => {
-          return String(item.key) == String(selectedPackItems[0].key)
-            ? { ...item, totalWeight: partialQty, loadingWeight: totalQty }
-            : item;
-        }),
-      );
+      const updatedPackTableData = packTableData.filter((item) => {
+        if (String(item.key) === String(selectedPackItem.key)) {
+          return {
+            ...item,
+            totalWeight: partialQty,
+            loadingWeight: totalQty,
+          };
+        }
+      });
 
-      // const newUnpackTableData = modifiedUnpackTableData.map((item) => {
-      //   if (selectedRowKeys2.includes(item.key)) {
-      //     return { ...item, partialQty: totalPartialQty };
-      //   }
-      //   return item;
-      // });
-
-      // setModifiedUnpackTableData(newUnpackTableData);
+      setPackTableData(updatedPackTableData);
       setShowPackData(true);
     }
   };
