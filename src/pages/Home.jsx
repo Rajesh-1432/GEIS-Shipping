@@ -353,8 +353,8 @@ const Home = () => {
   const key = "updatable";
   const handleCreateShpmnt = () => {
     if (inputValue == "150085599") {
-      const filter = data.filter((d) => d.sosto == "150085599")[0];
-      setFilterData([filter]);
+      const filter = data.filter((d) => d.sosto == "150085599");
+      setFilterData(filter);
       setDelivery("801963700");
     } else {
       console.log("4700003451");
@@ -469,7 +469,7 @@ const Home = () => {
         title="Fedex Service"
         open={isShipFedexModalOpen}
         onOk={() => {
-          console.log("Modal opened");
+          setIsShipFedexModalOpen(false);
         }}
         onCancel={() => setIsShipFedexModalOpen(false)}
         width={300}
@@ -524,38 +524,19 @@ const Home = () => {
           className="w-full mt-4"
           onClick={() => {
             console.log("message: ", message);
+            if (message === "4") {
+              setIsShipFedexModalOpen(false);
+              return;
+            }
+
             if (message === "3") {
               setInputValues({
-                input1: "045154",
+                input1: "04",
                 input2: serviceType,
                 input3: "SE",
                 input4: "45102E",
                 input5: "IND",
               });
-
-              setTable2Data([
-                {
-                  key: "1",
-                  hu: "1000077718",
-                  weight: 48,
-                  uom: "EA",
-                  tracking: "73456897213",
-                },
-                {
-                  key: "2",
-                  hu: "1000077719",
-                  weight: 43,
-                  uom: "EA",
-                  tracking: "73456897213",
-                },
-                {
-                  key: "3",
-                  hu: "1000077720",
-                  weight: 125,
-                  uom: "EA",
-                  tracking: "73456897213",
-                },
-              ]);
 
               setShowMessage(false);
               return;
@@ -566,6 +547,7 @@ const Home = () => {
               setShowMessage(true);
               message == "1" && setMessage("2");
               message == "2" && setMessage("3");
+              message == "3" && setMessage("4");
             }, 1000);
           }}
         >
