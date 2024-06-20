@@ -2,12 +2,8 @@ import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 const PackUnpackModal = ({ getPackTable, setTemp }) => {
-  const [showPackData, setShowPackData] = useState(false);
-  const [selectedRowKeys1, setSelectedRowKeys1] = useState([]);
-  console.log("selectedRowKeys1: ", selectedRowKeys1);
-  const [selectedRowKeys2, setSelectedRowKeys2] = useState([]);
-  const [modifiedUnpackTableData, setModifiedUnpackTableData] = useState([]);
-  const [packTableData, setPackTableData] = useState([
+  // Initial data for pack and unpack tables
+  const initialPackTableData = [
     {
       key: "1",
       hu: "1000077718",
@@ -41,9 +37,9 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
       unit: "LB",
       volume: 1.87,
     },
-  ]);
+  ];
 
-  const [unpackTableData, setUnpackTableData] = useState([
+  const initialUnpackTableData = [
     {
       key: "1",
       material: "THJK436300WLX",
@@ -83,8 +79,19 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
       item: "30",
       desc: "EXPORT CIRCUIT BREAKER #N/A",
     },
-  ]);
+  ];
 
+  // State variables
+  const [showPackData, setShowPackData] = useState(false);
+  const [selectedRowKeys1, setSelectedRowKeys1] = useState([]);
+  const [selectedRowKeys2, setSelectedRowKeys2] = useState([]);
+  const [modifiedUnpackTableData, setModifiedUnpackTableData] = useState([]);
+  const [packTableData, setPackTableData] = useState(initialPackTableData);
+  const [unpackTableData, setUnpackTableData] = useState(
+    initialUnpackTableData,
+  );
+
+  // Columns configuration for pack and unpack tables
   const packColumns = [
     {
       title: "HU",
@@ -190,11 +197,14 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
     },
   ];
 
+  // useEffect to handle side effects when packTableData changes
   useEffect(() => {
     getPackTable(packTableData);
     setTemp(packTableData);
+    console.log("handleUnpackClick: packTableData changed");
   }, [packTableData]);
 
+  // Function to handle the Pack operation
   const handlePackClick = () => {
     const selectedUnPackItems = unpackTableData.filter((item) =>
       selectedRowKeys2.includes(item.key),
@@ -214,16 +224,9 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
         0,
       );
 
-      const temp = packTableData.filter((item) => {
-        if (String(item.key) === String(selectedPackItem.key)) {
-          return {
-            ...item,
-            totalWeight: partialQty,
-            loadingWeight: totalQty,
-          };
-        }
-      });
-
+      const temp = packTableData.filter(
+        (item) => String(item.key) === String(selectedPackItem.key),
+      );
       temp[0].totalWeight = partialQty;
       temp[0].loadingWeight = totalQty;
 
@@ -238,22 +241,25 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
     }
   };
 
+  // Function to handle the Unpack operation
   const handleUnpackClick = () => {
-    setShowPackData(false);
+    // Reset pack table data to initial state
+    setPackTableData(initialPackTableData);
+    setUnpackTableData(initialUnpackTableData); // Reset unpack table data if needed
+    setShowPackData(false); // Reset showPackData state if needed
   };
 
+  // Function to handle row selection change for pack table
   const onSelectChange1 = (newSelectedRowKeys) => {
-    if (newSelectedRowKeys.length <= 1) {
-      console.log("selectedRowKeys1 changed: ", newSelectedRowKeys);
-      setSelectedRowKeys1(newSelectedRowKeys);
-    }
+    setSelectedRowKeys1(newSelectedRowKeys);
   };
 
+  // Function to handle row selection change for unpack table
   const onSelectChange2 = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys2 changed: ", newSelectedRowKeys);
     setSelectedRowKeys2(newSelectedRowKeys);
   };
 
+  // Row selection configuration for pack and unpack tables
   const rowSelection1 = {
     selectedRowKeys: selectedRowKeys1,
     onChange: onSelectChange1,
@@ -266,35 +272,52 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
 
   return (
     <div>
+      {/* Pack table */}
       <Table
-        dataSource={packTableData.map((item) => {
-          const isSelected = selectedRowKeys1.includes(item?.key);
-          return {
-            ...item,
-            totalWeight:
-              isSelected && showPackData ? item.totalWeight : undefined,
-            loadingWeight:
-              isSelected && showPackData ? item.loadingWeight : undefined,
-            allWeight: isSelected && showPackData ? item.allWeight : undefined,
-            tareWeight:
-              isSelected && showPackData ? item.tareWeight : undefined,
-            unit: isSelected && showPackData ? item.unit : undefined,
-            volume: isSelected && showPackData ? item.volume : undefined,
-          };
-        })}
+        dataSource={packTableData.map((item) => ({
+          ...item,
+          totalWeight:
+            selectedRowKeys1.includes(item.key) && showPackData
+              ? item.totalWeight
+              : undefined,
+          loadingWeight:
+            selectedRowKeys1.includes(item.key) && showPackData
+              ? item.loadingWeight
+              : undefined,
+          allWeight:
+            selectedRowKeys1.includes(item.key) && showPackData
+              ? item.allWeight
+              : undefined,
+          tareWeight:
+            selectedRowKeys1.includes(item.key) && showPackData
+              ? item.tareWeight
+              : undefined,
+          unit:
+            selectedRowKeys1.includes(item.key) && showPackData
+              ? item.unit
+              : undefined,
+          volume:
+            selectedRowKeys1.includes(item.key) && showPackData
+              ? item.volume
+              : undefined,
+        }))}
         columns={packColumns}
         pagination={false}
         rowSelection={{
           ...rowSelection1,
-          type: "radio", // Change to radio selection
+          type: "radio",
         }}
       />
+
+      {/* Pack and Unpack buttons */}
       <span className="flex gap-4 mt-4 mb-4">
         <Button onClick={handlePackClick}>Pack</Button>
         <Button type="default" onClick={handleUnpackClick}>
           Unpack
         </Button>
       </span>
+
+      {/* Unpack table */}
       <Table
         dataSource={showPackData ? modifiedUnpackTableData : unpackTableData}
         columns={unpackColumns}

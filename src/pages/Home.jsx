@@ -647,11 +647,7 @@ const Home = () => {
                   // width: "90%",
                 }}
                 onClick={() => {
-                  setShippingPackTable([]);
-                  setFilterData([]);
-                  setInputValue("");
-                  setInputValues([]);
-                  setDelivery("");
+                  window.location.reload();
                 }}
               >
                 Refresh
