@@ -7,7 +7,6 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
   console.log("selectedRowKeys1: ", selectedRowKeys1);
   const [selectedRowKeys2, setSelectedRowKeys2] = useState([]);
   const [modifiedUnpackTableData, setModifiedUnpackTableData] = useState([]);
-
   const [packTableData, setPackTableData] = useState([
     {
       key: "1",
@@ -205,11 +204,7 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
       selectedRowKeys1.includes(item.key),
     );
 
-    if (
-      selectedUnPackItems.length > 0 &&
-      selectedUnPackItems &&
-      selectedPackItem
-    ) {
+    if (selectedUnPackItems.length > 0 && selectedPackItem) {
       const totalQty = selectedUnPackItems.reduce(
         (acc, item) => acc + item.totalQty,
         0,
@@ -219,7 +214,7 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
         0,
       );
 
-      const updatedPackTableData = packTableData.filter((item) => {
+      const temp = packTableData.filter((item) => {
         if (String(item.key) === String(selectedPackItem.key)) {
           return {
             ...item,
@@ -229,8 +224,17 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
         }
       });
 
-      setPackTableData(updatedPackTableData);
+      temp[0].totalWeight = partialQty;
+      temp[0].loadingWeight = totalQty;
+
+      const updatedUnpackTableData = unpackTableData.filter(
+        (item) => !selectedRowKeys2.includes(item.key),
+      );
+
+      setPackTableData(temp);
+      setModifiedUnpackTableData(updatedUnpackTableData);
       setShowPackData(true);
+      setSelectedRowKeys2([]);
     }
   };
 
@@ -239,8 +243,10 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
   };
 
   const onSelectChange1 = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys1 changed: ", newSelectedRowKeys);
-    setSelectedRowKeys1(newSelectedRowKeys);
+    if (newSelectedRowKeys.length <= 1) {
+      console.log("selectedRowKeys1 changed: ", newSelectedRowKeys);
+      setSelectedRowKeys1(newSelectedRowKeys);
+    }
   };
 
   const onSelectChange2 = (newSelectedRowKeys) => {
@@ -262,7 +268,7 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
     <div>
       <Table
         dataSource={packTableData.map((item) => {
-          const isSelected = selectedRowKeys1.includes(item.key);
+          const isSelected = selectedRowKeys1.includes(item?.key);
           return {
             ...item,
             totalWeight:
@@ -278,7 +284,10 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
         })}
         columns={packColumns}
         pagination={false}
-        rowSelection={rowSelection1} // Pass rowSelection as a prop
+        rowSelection={{
+          ...rowSelection1,
+          type: "radio", // Change to radio selection
+        }}
       />
       <span className="flex gap-4 mt-4 mb-4">
         <Button onClick={handlePackClick}>Pack</Button>
