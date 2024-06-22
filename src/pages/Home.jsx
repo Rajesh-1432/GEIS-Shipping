@@ -7,6 +7,7 @@ import { Button, Card, DatePicker, Input, Modal, Radio, Table } from "antd";
 import { useEffect, useState } from "react";
 import PackUnpackModal from "./PackModal";
 import moment from "moment";
+import abb from "../assets/abb.png";
 
 const data = [
   {
@@ -424,7 +425,7 @@ const Home = () => {
   return (
     <div
       style={{
-        background: "linear-gradient(#d2e8fd, #ffdfe2)",
+        // background: "linear-gradient(#d2e8fd, #ffdfe2)",
         height: "100vh",
         display: "flex",
       }}
@@ -559,16 +560,20 @@ const Home = () => {
       <div style={{ flex: 1 }}>
         <div
           style={{
-            // padding: 2,
             fontSize: 34,
-
+            display: "flex",
+            justifyContent: "center",
             color: "#117ca7",
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-            textAlign: "start",
-            // marginLeft: 2,
+            padding: "10px 20px", // Adjust padding as needed
           }}
         >
-          <span style={{ marginLeft: 14 }}> Shipping Simplify</span>
+          <span style={{ alignSelf: "flex-start" }}>
+            <img src={abb} alt={abb} className="w-28 h-10" />
+          </span>
+          <span style={{ marginLeft: "auto", marginRight: "auto" }}>
+            Shipping Simplification
+          </span>
         </div>
         <div
           style={{
@@ -643,7 +648,7 @@ const Home = () => {
               <Button
                 style={{
                   color: "white",
-                  backgroundColor: "#117ca7",
+                  backgroundColor: "red",
                   // width: "90%",
                 }}
                 onClick={() => {
@@ -656,7 +661,9 @@ const Home = () => {
               <Button
                 style={{
                   color: "white",
-                  backgroundColor: "#117ca7",
+                  // backgroundColor: "#117ca7",
+                  backgroundColor: "red",
+
                   // width: "90%",
                 }}
                 onClick={showModal}
@@ -697,7 +704,11 @@ const Home = () => {
             >
               <Button
                 onClick={handleCreateShpmnt}
-                style={{ color: "white", backgroundColor: "#0f7d1f" }}
+                style={{
+                  color: "white",
+                  //  backgroundColor: "#0f7d1f"
+                  backgroundColor: "red",
+                }}
               >
                 Create Shipment <FileAddOutlined style={{ color: "white" }} />
               </Button>
@@ -829,7 +840,7 @@ const Home = () => {
                       icon={<FileAddOutlined />}
                       size="small"
                       onClick={() => setIsShipModalOpen(true)}
-                      style={{ color: "white", backgroundColor: "#0f7d1f" }}
+                      style={{ color: "white", backgroundColor: "red" }}
                     >
                       SHIP
                     </Button>
