@@ -7,7 +7,7 @@ import { Button, Card, DatePicker, Input, Modal, Radio, Table } from "antd";
 import { useEffect, useState } from "react";
 import PackUnpackModal from "./PackModal";
 import moment from "moment";
-import abb from "../assets/abb.png";
+import Picture1 from "../assets/Picture1.png";
 
 const data = [
   {
@@ -569,7 +569,7 @@ const Home = () => {
           }}
         >
           <span style={{ alignSelf: "flex-start" }}>
-            <img src={abb} alt={abb} className="w-28 h-10" />
+            <img src={Picture1} alt={Picture1} className="w-[100px] h-12" />
           </span>
           <span style={{ marginLeft: "auto", marginRight: "auto" }}>
             Shipping Simplification
