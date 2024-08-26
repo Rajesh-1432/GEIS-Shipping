@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ./client
+    container_name: invoice_frontend
+    ports:
+      - 6052:3000
