@@ -6,4 +6,4 @@ services:
       context: ./
     container_name: shipping_frontend
     ports:
-      - 6052:3000
+      - 6052:80
