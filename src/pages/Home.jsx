@@ -19,7 +19,7 @@ const data = [
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 10,
-    pickqty: 20,
+    pickqty: 0,
   },
   {
     key: "2",
@@ -30,7 +30,7 @@ const data = [
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 15,
-    pickqty: 25,
+    pickqty: 0,
   },
   {
     key: "3",
@@ -41,7 +41,7 @@ const data = [
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 10,
-    pickqty: 20,
+    pickqty: 0,
   },
   {
     key: "4",
@@ -52,7 +52,7 @@ const data = [
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 15,
-    pickqty: 25,
+    pickqty: 0,
   },
   {
     key: "5",
@@ -63,7 +63,7 @@ const data = [
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 10,
-    pickqty: 20,
+    pickqty: 0,
   },
   {
     key: "6",
@@ -74,7 +74,7 @@ const data = [
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 15,
-    pickqty: 25,
+    pickqty: 0,
   },
   // {
   //   key: "7",
@@ -96,7 +96,7 @@ const data = [
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 15,
-    pickqty: 25,
+    pickqty: 0,
   },
   // {
   //   key: "9",
@@ -118,7 +118,7 @@ const data = [
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 15,
-    pickqty: 25,
+    pickqty: 0,
   },
 ];
 
