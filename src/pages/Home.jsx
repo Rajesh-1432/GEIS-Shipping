@@ -35,9 +35,9 @@ const data = [
   {
     key: "3",
     sosto: "150085599",
-    soline: "30",
+    soline: "20",
     poline: "211000000145",
-    delyline: "30",
+    delyline: "20",
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 10,
@@ -57,9 +57,9 @@ const data = [
   {
     key: "5",
     sosto: "150085599",
-    soline: "10",
+    soline: "30",
     poline: "211000000145",
-    delyline: "10",
+    delyline: "30",
     material: "THJK436300WLX",
     desc: "EXPORT CIRCUIT BREAKER",
     delyqty: 10,
