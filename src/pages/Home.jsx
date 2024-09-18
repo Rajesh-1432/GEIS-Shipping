@@ -3,7 +3,16 @@ import {
   DiffOutlined,
   FileAddOutlined,
 } from "@ant-design/icons";
-import { Button, Card, DatePicker, Input, Modal, Radio, Table } from "antd";
+import {
+  Button,
+  Card,
+  DatePicker,
+  Input,
+  Modal,
+  Radio,
+  Spin,
+  Table,
+} from "antd";
 import { useEffect, useState } from "react";
 import PackUnpackModal from "./PackModal";
 import moment from "moment";
@@ -126,7 +135,8 @@ const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isShipModalOpen, setIsShipModalOpen] = useState(false);
   const [isShipFedexModalOpen, setIsShipFedexModalOpen] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [value, setValue] = useState(1);
   const [delivery, setDelivery] = useState("");
 
@@ -349,19 +359,36 @@ const Home = () => {
     },
   ];
   const handleRowClick = (record) => {
+    // Start a timeout for 10 seconds
     setModalVisible(false);
-    setShippingPackTable(temp);
+    setLoading2(true);
+    setTimeout(() => {
+      // Code to execute after the delay
+      setShippingPackTable(temp);
+      setLoading2(false);
+    }, 2500); // 2.5-second delay
   };
 
   const key = "updatable";
+
   const handleCreateShpmnt = () => {
-    if (inputValue == "150085599") {
-      const filter = data.filter((d) => d.sosto == "150085599");
-      setFilterData(filter);
-      setDelivery("801963700");
-    } else {
-      console.log("4700003451");
-    }
+    setLoading(true); // Set loading to true when enter is hit
+
+    setTimeout(() => {
+      if (inputValue === "150085599") {
+        const filter = data.filter((d) => d.sosto === "150085599");
+        setFilterData(filter);
+
+        // Delay the delivery update by an additional 10 seconds
+        setTimeout(() => {
+          setDelivery("801963700");
+          setLoading(false); // Stop loading after setting delivery
+        }, 3000); // 10-second delay for setting delivery
+      } else {
+        console.log("4700003451");
+        setLoading(false); // Stop loading immediately in the else case
+      }
+    }, 1000); // Initial 10-second delay for filtering data
   };
 
   useEffect(() => {
@@ -422,6 +449,30 @@ const Home = () => {
   const handleCancel = () => {
     setModalVisible(false);
   };
+  const [loadingInput, setLoadingInput] = useState({
+    input1: false,
+    input2: false,
+    input3: false,
+    input4: false,
+    input5: false,
+  });
+
+  const handleInputDelay = (name, value) => {
+    console.log(`Input ${name} changed to ${value}. Starting delay...`);
+
+    setLoadingInput((prev) => ({ ...prev, [name]: true })); // Start spinner for specific input
+
+    // Simulate delay (e.g., for API call)
+    setTimeout(() => {
+      console.log(`Updating input ${name} after delay...`);
+
+      setInputValues((prev) => ({ ...prev, [name]: value })); // Update input value
+      setLoadingInput((prev) => ({ ...prev, [name]: false })); // Stop spinner
+
+      console.log(`Input ${name} updated to ${value}. Loading complete.`);
+    }, 2000); // 2-second delay
+  };
+
   return (
     <div
       style={{
@@ -751,6 +802,7 @@ const Home = () => {
                   columns={columns}
                   pagination={false}
                   scroll={{ y: 300 }}
+                  loading={loading}
                 />
               </span>
               <div
@@ -862,127 +914,46 @@ const Home = () => {
                         justifyContent: "space-around",
                       }}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <label
-                          htmlFor="input1"
-                          style={{ width: 100, marginRight: 10 }}
-                        >
-                          Ship,Cond
-                        </label>
-                        <Input
-                          id="input1"
-                          style={{ width: 200 }}
-                          value={inputValues.input1}
-                          onChange={(e) =>
-                            setInputValues({
-                              ...inputValues,
-                              input1: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <label
-                          htmlFor="input2"
-                          style={{ width: 100, marginRight: 10 }}
-                        >
-                          Carrier
-                        </label>
-                        <Input
-                          id="input2"
-                          style={{ width: 200 }}
-                          value={inputValues.input2}
-                          onChange={(e) =>
-                            setInputValues({
-                              ...inputValues,
-                              input2: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <label
-                          htmlFor="input3"
-                          style={{ width: 100, marginRight: 10 }}
-                        >
-                          Service Type
-                        </label>
-                        <Input
-                          id="input3"
-                          style={{ width: 200 }}
-                          value={inputValues.input3}
-                          onChange={(e) =>
-                            setInputValues({
-                              ...inputValues,
-                              input3: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <label
-                          htmlFor="input4"
-                          style={{ width: 100, marginRight: 10 }}
-                        >
-                          Truck ID
-                        </label>
-                        <Input
-                          id="input4"
-                          style={{ width: 200 }}
-                          value={inputValues.input4}
-                          onChange={(e) =>
-                            setInputValues({
-                              ...inputValues,
-                              input4: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div
-                        style={{
-                          marginBottom: 20,
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <label
-                          htmlFor="input5"
-                          style={{ width: 100, marginRight: 10 }}
-                        >
-                          Address:
-                        </label>
-                        <Input
-                          id="input5"
-                          style={{ width: 200 }}
-                          value={inputValues.input5}
-                          onChange={(e) =>
-                            setInputValues({
-                              ...inputValues,
-                              input5: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
+                      {["input1", "input2", "input3", "input4", "input5"].map(
+                        (inputId, index) => (
+                          <div
+                            key={inputId}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              marginBottom: 5,
+                            }}
+                          >
+                            <label
+                              htmlFor={inputId}
+                              style={{ width: 100, marginRight: 10 }}
+                            >
+                              {
+                                [
+                                  "Ship,Cond",
+                                  "Carrier",
+                                  "Service Type",
+                                  "Truck ID",
+                                  "Address:",
+                                ][index]
+                              }
+                            </label>
+                            <Spin
+                              spinning={loadingInput[inputId]} // Control loader for each input
+                              style={{ marginRight: 10 }}
+                            >
+                              <Input
+                                id={inputId}
+                                style={{ width: 200 }}
+                                value={inputValues[inputId]} // Controlled input value
+                                onChange={(e) =>
+                                  handleInputDelay(inputId, e.target.value)
+                                } // Delay input change
+                              />
+                            </Spin>
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 </Card>
@@ -1016,6 +987,7 @@ const Home = () => {
                   columns={packTableColumns}
                   pagination={false}
                   scroll={{ y: 100 }}
+                  loading={loading2}
                 />
               </span>
 
