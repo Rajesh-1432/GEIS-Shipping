@@ -17,124 +17,13 @@ import { useEffect, useState } from "react";
 import PackUnpackModal from "./PackModal";
 import moment from "moment";
 import Picture1 from "../assets/Picture1.png";
-
-const data = [
-  {
-    key: "1",
-    sosto: "150085599",
-    soline: "10",
-    poline: "211000000145",
-    delyline: "10",
-    material: "THJK436300WLX",
-    desc: "EXPORT CIRCUIT BREAKER",
-    delyqty: 10,
-    pickqty: 0,
-  },
-  {
-    key: "2",
-    sosto: "1000077718",
-    soline: "20",
-    poline: "211000000145",
-    delyline: "20",
-    material: "THJK436300WLX",
-    desc: "EXPORT CIRCUIT BREAKER",
-    delyqty: 15,
-    pickqty: 0,
-  },
-  {
-    key: "3",
-    sosto: "150085599",
-    soline: "20",
-    poline: "211000000145",
-    delyline: "20",
-    material: "THJK436300WLX",
-    desc: "EXPORT CIRCUIT BREAKER",
-    delyqty: 10,
-    pickqty: 0,
-  },
-  {
-    key: "4",
-    sosto: "1000077718",
-    soline: "20",
-    poline: "211000000145",
-    delyline: "20",
-    material: "THJK436300WLX",
-    desc: "EXPORT CIRCUIT BREAKER",
-    delyqty: 15,
-    pickqty: 0,
-  },
-  {
-    key: "5",
-    sosto: "150085599",
-    soline: "30",
-    poline: "211000000145",
-    delyline: "30",
-    material: "THJK436300WLX",
-    desc: "EXPORT CIRCUIT BREAKER",
-    delyqty: 10,
-    pickqty: 0,
-  },
-  {
-    key: "6",
-    sosto: "1000077718",
-    soline: "20",
-    poline: "211000000145",
-    delyline: "20",
-    material: "THJK436300WLX",
-    desc: "EXPORT CIRCUIT BREAKER",
-    delyqty: 15,
-    pickqty: 0,
-  },
-  // {
-  //   key: "7",
-  //   sosto: "150085599",
-  //   soline: "SOLine1",
-  //   poline: "211000000145",
-  //   delyline: "DelyLine1",
-  //   material: "THJK436300WLX",
-  //   desc: "EXPORT CIRCUIT BREAKER",
-  //   delyqty: 10,
-  //   pickqty: 20,
-  // },
-  {
-    key: "8",
-    sosto: "1000077718",
-    soline: "20",
-    poline: "211000000145",
-    delyline: "20",
-    material: "THJK436300WLX",
-    desc: "EXPORT CIRCUIT BREAKER",
-    delyqty: 15,
-    pickqty: 0,
-  },
-  // {
-  //   key: "9",
-  //   sosto: "150085599",
-  //   soline: "SOLine1",
-  //   poline: "211000000145",
-  //   delyline: "DelyLine1",
-  //   material: "THJK436300WLX",
-  //   desc: "EXPORT CIRCUIT BREAKER",
-  //   delyqty: 10,
-  //   pickqty: 20,
-  // },
-  {
-    key: "10",
-    sosto: "1000077718",
-    soline: "20",
-    poline: "211000000145",
-    delyline: "20",
-    material: "THJK436300WLX",
-    desc: "EXPORT CIRCUIT BREAKER",
-    delyqty: 15,
-    pickqty: 0,
-  },
-];
+import soData from "../json/soData.json";
 
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [isShipModalOpen, setIsShipModalOpen] = useState(false);
   const [isShipFedexModalOpen, setIsShipFedexModalOpen] = useState(false);
+  const [isShipLtlModalOpen, setIsShipLtlModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [value, setValue] = useState(1);
@@ -142,12 +31,15 @@ const Home = () => {
 
   const [serviceType, setServiceType] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+  const [showLtlMessage, setShowLtlMessage] = useState(false);
   const [message, setMessage] = useState("0");
 
   const [dataSource, setDataSource] = useState([]);
   const [filterData, setFilterData] = useState([]);
   const [shippingPackTable, setShippingPackTable] = useState([]);
   const [temp, setTemp] = useState([]);
+  const [ltlInputValue, setLtlInputValue] = useState("");
+  console.log("ltlInputValue: ", ltlInputValue);
 
   const [inputValue, setInputValue] = useState("");
   const [packTableDataFromModal, setPackTableDataFromModal] = useState([]);
@@ -205,6 +97,7 @@ const Home = () => {
           variant="borderless"
         />
       ),
+      width: 110,
     },
     {
       title: "SO Line",
@@ -217,6 +110,7 @@ const Home = () => {
           variant="borderless"
         />
       ),
+      width: 70,
     },
     {
       title: "PO Line",
@@ -247,25 +141,27 @@ const Home = () => {
       title: "Material",
       dataIndex: "material",
       key: "material",
-      render: (text, record) => (
-        <Input
-          value={record.material}
-          onChange={(e) => handleInputChange(e, record.key, "material")}
-          variant="borderless"
-        />
-      ),
+      // render: (text, record) => (
+      //   <Input
+      //     value={record.material}
+      //     onChange={(e) => handleInputChange(e, record.key, "material")}
+      //     variant="borderless"
+      //   />
+      // ),
+      width: 135,
     },
     {
       title: "Description",
       dataIndex: "desc",
       key: "desc",
-      render: (text, record) => (
-        <Input
-          value={record.desc}
-          onChange={(e) => handleInputChange(e, record.key, "desc")}
-          variant="borderless"
-        />
-      ),
+      // render: (text, record) => (
+      //   <Input
+      //     value={record.desc}
+      //     onChange={(e) => handleInputChange(e, record.key, "desc")}
+      //     variant="borderless"
+      //   />
+      // ),
+      width: 135,
     },
     {
       title: "Dely Qty",
@@ -278,6 +174,7 @@ const Home = () => {
           variant="borderless"
         />
       ),
+      width: 80,
     },
     {
       title: "Pick Qty",
@@ -290,6 +187,31 @@ const Home = () => {
           variant="borderless"
         />
       ),
+      width: 70,
+    },
+    {
+      title: "Batch",
+      dataIndex: "batch",
+      key: "batch",
+      // render: (text, record) => (
+      //   <Input
+      //     value={record.pickqty}
+      //     onChange={(e) => handleInputChange(e, record.key, "pickqty")}
+      //     variant="borderless"
+      //   />
+      // ),
+    },
+    {
+      title: "Serial",
+      dataIndex: "serial",
+      key: "serial",
+      // render: (text, record) => (
+      //   <Input
+      //     value={record.pickqty}
+      //     onChange={(e) => handleInputChange(e, record.key, "pickqty")}
+      //     variant="borderless"
+      //   />
+      // ),
     },
   ];
 
@@ -323,41 +245,7 @@ const Home = () => {
     //   ),
     // },
   ];
-  const packTableData = [
-    {
-      key: "1",
-      hu: "1000077718",
-      desc: "CARTON US",
-      weight: 50,
-      loadingWeight: 48,
-      allWeight: "",
-      tareWeight: 2,
-      uom: "LB",
-      volume: 1.57,
-    },
-    {
-      key: "2",
-      hu: "1000077719",
-      desc: "CARTON US",
-      weight: 43,
-      loadingWeight: 120,
-      allWeight: "",
-      tareWeight: 3,
-      uom: "LB",
-      volume: 1.47,
-    },
-    {
-      key: "3",
-      hu: "1000077720",
-      desc: "CARTON US",
-      weight: 125,
-      loadingWeight: 120,
-      allWeight: "",
-      tareWeight: 5,
-      uom: "LB",
-      volume: 1.87,
-    },
-  ];
+
   const handleRowClick = (record) => {
     // Start a timeout for 10 seconds
     setModalVisible(false);
@@ -370,25 +258,30 @@ const Home = () => {
   };
 
   const key = "updatable";
-
   const handleCreateShpmnt = () => {
     setLoading(true); // Set loading to true when enter is hit
 
     setTimeout(() => {
-      if (inputValue === "150085599") {
-        const filter = data.filter((d) => d.sosto === "150085599");
+      const validInputs = {
+        150085599: "801963700",
+        150085638: "801963701",
+        4700632105: "801963702",
+      };
+
+      if (validInputs[inputValue]) {
+        const filter = soData.filter((d) => d.sosto === inputValue);
         setFilterData(filter);
 
-        // Delay the delivery update by an additional 10 seconds
+        // Delay the delivery update by an additional 3 seconds
         setTimeout(() => {
-          setDelivery("801963700");
+          setDelivery(validInputs[inputValue]);
           setLoading(false); // Stop loading after setting delivery
-        }, 3000); // 10-second delay for setting delivery
+        }, 3000);
       } else {
-        console.log("4700003451");
+        console.log("Invalid input");
         setLoading(false); // Stop loading immediately in the else case
       }
-    }, 1000); // Initial 10-second delay for filtering data
+    }, 1000); // Initial 1-second delay for filtering data
   };
 
   useEffect(() => {
@@ -502,7 +395,10 @@ const Home = () => {
           </Radio.Group>
           <div className="flex flex-col items-start justify-between w-full gap-2">
             <Button
-              onClick={() => setIsShipFedexModalOpen(false)}
+              onClick={() => {
+                setIsShipModalOpen(false);
+                setIsShipLtlModalOpen(true);
+              }}
               className="w-full"
             >
               Ship LTL
@@ -519,6 +415,48 @@ const Home = () => {
           </div>
         </div>
       </Modal>
+      {/* ltl modal */}
+
+      <Modal
+        title="Ltl Service"
+        open={isShipLtlModalOpen}
+        onOk={() => {
+          setIsShipLtlModalOpen(false);
+        }}
+        onCancel={() => setIsShipLtlModalOpen(false)}
+        width={300}
+        footer={null}
+      >
+        <div className="">
+          <Input
+            placeholder="Enter here"
+            value={ltlInputValue}
+            onChange={(e) => setLtlInputValue(e.target.value)}
+            className="mb-2"
+          />
+
+          {/* Save button */}
+          <Button
+            onClick={(e) => {
+              // Perform your save logic here
+              setIsShipLtlModalOpen(false);
+
+              // Show message after 1 second
+              setTimeout(() => {
+                setMessage("1");
+                setShowLtlMessage(true);
+              }, 1000);
+
+              // Clear the input field after saving
+              // setLtlInputValue("");
+            }}
+          >
+            Save
+          </Button>
+          <Button onClick={() => setIsShipLtlModalOpen(false)}>Cancel</Button>
+        </div>
+      </Modal>
+      {/* fedex Modal */}
       <Modal
         title="Fedex Service"
         open={isShipFedexModalOpen}
@@ -562,6 +500,54 @@ const Home = () => {
           </Button>
         </div>
       </Modal>
+      {/* ltl modal for message */}
+      <Modal
+        title="Ltl Service"
+        open={showLtlMessage}
+        footer={null}
+        onCancel={() => setShowLtlMessage(false)}
+        width={200}
+      >
+        <div className="flex flex-col items-center justify-between w-full">
+          {message === "1" && <div>Call to Ltl sever initiated</div>}
+          {message === "2" && "Ltl label printed"}
+          {message === "3" && "Post Good issued"}
+        </div>
+        <Button
+          className="w-full mt-4"
+          onClick={() => {
+            console.log("message: ", message);
+            if (message === "4") {
+              setIsShipLtlModalOpen(false);
+              return;
+            }
+
+            if (message === "3") {
+              setInputValues({
+                input1: "04",
+                input2: ltlInputValue,
+                input3: "SE",
+                input4: "45102E",
+                input5: "IND",
+              });
+
+              setShowLtlMessage(false);
+              return;
+            }
+
+            setShowLtlMessage(false);
+            setTimeout(() => {
+              setShowLtlMessage(true);
+              message == "1" && setMessage("2");
+              message == "2" && setMessage("3");
+              message == "3" && setMessage("4");
+            }, 1000);
+          }}
+        >
+          OK
+        </Button>
+      </Modal>
+      {/* fedex modal for message */}
       <Modal
         title="Fedex Service"
         open={showMessage}
@@ -742,6 +728,7 @@ const Home = () => {
                 <PackUnpackModal
                   getPackTable={handleGetPackData}
                   setTemp={setTemp}
+                  soNumber={inputValue}
                 />
               </Modal>
             </span>
@@ -986,7 +973,6 @@ const Home = () => {
                   dataSource={shippingPackTable}
                   columns={packTableColumns}
                   pagination={false}
-                  scroll={{ y: 100 }}
                   loading={loading2}
                 />
               </span>
@@ -1023,10 +1009,26 @@ const Home = () => {
                 </div>
                 {shippingPackTable.length > 0 && (
                   <div>
-                    <span>
-                      Gexpro – Woodward Lincoln Campus, Attn: Jay Keller, 5303
-                      East 47th Ave STE A, Denver CO 80216, USA
-                    </span>
+                    {inputValue === "150085599" && (
+                      <span>
+                        Gexpro – Woodward Lincoln Campus, Attn: Jay Keller, 5303
+                        East 47th Ave STE A, Denver CO 80216, USA
+                      </span>
+                    )}
+
+                    {inputValue === "150085638" && (
+                      <span>
+                        Walmart, Attn: Kathy Jones, Louisville, KY, United
+                        States
+                      </span>
+                    )}
+
+                    {inputValue === "4700632105" && (
+                      <span>
+                        Target Sortation Center, Attn: Louis Pale, 2700 Winter
+                        St NE, Minneapolis, MN 55413, United States
+                      </span>
+                    )}
                   </div>
                 )}
               </Card>
@@ -1046,17 +1048,30 @@ const Home = () => {
                   Shipping Instruction
                 </div>
                 {shippingPackTable.length > 0 && (
-                  <div className="flex flex-col gap-3">
-                    <div>1. Orders are processed within 1-2 business days.</div>
-                    <div>
-                      2. Domestic delivery: Standard (3-5 business days),
-                      Expedited (1-3 business days), Overnight (1 business day).
-                    </div>
+                  <div>
+                    {inputValue === "150085599" && (
+                      <div className="flex flex-col gap-3">
+                        <div>
+                          1. Orders are processed within 1-2 business days.
+                        </div>
+                        <div>
+                          2. Domestic delivery: Standard (3-5 business days),
+                          Expedited (1-3 business days), Overnight (1 business
+                          day).
+                        </div>
 
-                    <div>
-                      3. International delivery: Standard (7-21 business days),
-                      Expedited (5-10 business days).
-                    </div>
+                        <div>
+                          3. International delivery: Standard (7-21 business
+                          days), Expedited (5-10 business days).
+                        </div>
+                      </div>
+                    )}
+                    {inputValue === "150085638" && (
+                      <div>Fragile items, only upside</div>
+                    )}{" "}
+                    {inputValue === "4700632105" && (
+                      <div>Fragile items, only upside</div>
+                    )}
                   </div>
                 )}
               </Card>

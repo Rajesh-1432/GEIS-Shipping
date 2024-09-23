@@ -1,0 +1,50 @@
+[
+  {
+    "title": "HU",
+    "dataIndex": "hu",
+    "key": "hu",
+    "width": 120
+  },
+  {
+    "title": "Description",
+    "dataIndex": "desc",
+    "key": "desc",
+    "width": 120
+  },
+  {
+    "title": "Total Weight",
+    "dataIndex": "totalWeight",
+    "key": "totalWeight",
+    "width": 120
+  },
+  {
+    "title": "Loading Weight",
+    "dataIndex": "loadingWeight",
+    "key": "loadingWeight",
+    "width": 120
+  },
+  {
+    "title": "All. Loading Weight",
+    "dataIndex": "allWeight",
+    "key": "allWeight",
+    "width": 120
+  },
+  {
+    "title": "Tare Weight",
+    "dataIndex": "tareWeight",
+    "key": "tareWeight",
+    "width": 120
+  },
+  {
+    "title": "Wgt Unit",
+    "dataIndex": "unit",
+    "key": "unit",
+    "width": 120
+  },
+  {
+    "title": "Total Volume",
+    "dataIndex": "volume",
+    "key": "volume",
+    "width": 120
+  }
+]

@@ -1,237 +1,66 @@
-import { Button, Table } from "antd";
+import { Button, Table, Input } from "antd";
 import React, { useEffect, useState } from "react";
+import initialPackTableData from "../json/initialPackTableData.json";
+import initialUnpackTableData from "../json/initialUnpackTableData.json";
+import packColumns from "../json/packColumns.json";
+import unpackColumns from "../json/unpackColumns.json";
 
-const PackUnpackModal = ({ getPackTable, setTemp }) => {
-  // Initial data for pack and unpack tables
-  const initialPackTableData = [
-    {
-      key: "1",
-      hu: "1000077718",
-      desc: "CARTON US",
-      totalWeight: 50,
-      loadingWeight: 48,
-      allWeight: "",
-      tareWeight: 2,
-      unit: "LB",
-      volume: 1.57,
-    },
-    {
-      key: "2",
-      hu: "1000077719",
-      desc: "CARTON US",
-      totalWeight: 43,
-      loadingWeight: 40,
-      allWeight: "",
-      tareWeight: 3,
-      unit: "LB",
-      volume: 1.47,
-    },
-    {
-      key: "3",
-      hu: "1000077720",
-      desc: "CARTON US",
-      totalWeight: 125,
-      loadingWeight: 120,
-      allWeight: "",
-      tareWeight: 5,
-      unit: "LB",
-      volume: 1.87,
-    },
-  ];
-
-  const initialUnpackTableData = [
-    {
-      key: "1",
-      material: "THJK436300WLX",
-      partialQty: 3,
-      totalQty: 3,
-      uom: "EA",
-      plant: "USW6",
-      storg: "WHSE",
-      stg: "",
-      document: "801963700",
-      item: "10",
-      desc: "EXPORT CIRCUIT BREAKER #N/A",
-    },
-    {
-      key: "2",
-      material: "THJK436300WLX",
-      partialQty: 2,
-      totalQty: 2,
-      uom: "EA",
-      plant: "USW6",
-      storg: "WHSE",
-      stg: "",
-      document: "801963700",
-      item: "10",
-      desc: "EXPORT CIRCUIT BREAKER #N/A",
-    },
-    {
-      key: "3",
-      material: "THJK436300WLX",
-      partialQty: 20,
-      totalQty: 20,
-      uom: "EA",
-      plant: "USW6",
-      storg: "WHSE",
-      stg: "",
-      document: "801963700",
-      item: "30",
-      desc: "EXPORT CIRCUIT BREAKER #N/A",
-    },
-  ];
-
-  // State variables
+const PackUnpackModal = ({ getPackTable, setTemp, soNumber }) => {
+  console.log("soNumber: ", soNumber);
+  // const [soNumber, setSoNumber] = useState(""); // New state for soNumber input
   const [showPackData, setShowPackData] = useState(false);
   const [selectedRowKeys1, setSelectedRowKeys1] = useState([]);
   const [selectedRowKeys2, setSelectedRowKeys2] = useState([]);
   const [modifiedUnpackTableData, setModifiedUnpackTableData] = useState([]);
   const [packTableData, setPackTableData] = useState(initialPackTableData);
+  console.log("packTableData: ", packTableData);
   const [unpackTableData, setUnpackTableData] = useState(
-    initialUnpackTableData,
+    initialUnpackTableData
   );
 
-  // Columns configuration for pack and unpack tables
-  const packColumns = [
-    {
-      title: "HU",
-      dataIndex: "hu",
-      key: "hu",
-      width: 120,
-    },
-    {
-      title: "Description",
-      dataIndex: "desc",
-      key: "desc",
-      width: 120,
-    },
-    {
-      title: "Total Weight",
-      dataIndex: "totalWeight",
-      key: "totalWeight",
-      width: 120,
-    },
-    {
-      title: "Loading Weight",
-      dataIndex: "loadingWeight",
-      key: "loadingWeight",
-      width: 120,
-    },
-    {
-      title: "All. Loading Weight",
-      dataIndex: "allWeight",
-      key: "allWeight",
-      width: 120,
-    },
-    {
-      title: "Tare Weight",
-      dataIndex: "tareWeight",
-      key: "tareWeight",
-      width: 120,
-    },
-    {
-      title: "Wgt Unit",
-      dataIndex: "unit",
-      key: "unit",
-      width: 120,
-    },
-    {
-      title: "Total Volume",
-      dataIndex: "volume",
-      key: "volume",
-      width: 120,
-    },
-  ];
+  // Filter data based on the entered soNumber
+  const filteredPackTableData = packTableData.filter((item) => {
+    const itemSoNumber = String(item.soNumber);
+    console.log("Current item soNumber:", itemSoNumber);
+    return itemSoNumber === soNumber;
+  });
+  console.log("filteredPackTableData: ", filteredPackTableData);
+  const filteredUnpackTableData = unpackTableData.filter(
+    (item) => String(item.soNumber) == soNumber
+  );
+  console.log("filteredUnpackTableData: ", filteredUnpackTableData);
 
-  const unpackColumns = [
-    {
-      title: "Material",
-      dataIndex: "material",
-      key: "material",
-      width: 120,
-    },
-    {
-      title: "Partial Qty",
-      dataIndex: "partialQty",
-      key: "partialQty",
-    },
-    {
-      title: "Total Qty",
-      dataIndex: "totalQty",
-      key: "totalQty",
-    },
-    {
-      title: "UoM",
-      dataIndex: "uom",
-      key: "uom",
-    },
-    {
-      title: "Plant",
-      dataIndex: "plant",
-      key: "plant",
-    },
-    {
-      title: "StorgL",
-      dataIndex: "storg",
-      key: "storg",
-    },
-    {
-      title: "Dest.Stg.Loc ",
-      dataIndex: "stg",
-      key: "stg",
-    },
-    {
-      title: "Document",
-      dataIndex: "document",
-      key: "document",
-    },
-    {
-      title: "Item",
-      dataIndex: "item",
-      key: "item",
-    },
-    {
-      title: "Description",
-      dataIndex: "desc",
-      key: "desc",
-    },
-  ];
-
-  // useEffect to handle side effects when packTableData changes
   useEffect(() => {
-    getPackTable(packTableData);
-    setTemp(packTableData);
-    console.log("handleUnpackClick: packTableData changed");
-  }, [packTableData]);
+    getPackTable(filteredPackTableData); // Use filtered data
+    // setTemp(filteredPackTableData);
+  }, [filteredPackTableData]);
 
-  // Function to handle the Pack operation
   const handlePackClick = () => {
     const selectedUnPackItems = unpackTableData.filter((item) =>
-      selectedRowKeys2.includes(item.key),
+      selectedRowKeys2.includes(item.key)
     );
-
     const selectedPackItem = packTableData.find((item) =>
-      selectedRowKeys1.includes(item.key),
+      selectedRowKeys1.includes(item.key)
     );
 
     if (selectedUnPackItems.length > 0 && selectedPackItem) {
       const totalQty = selectedUnPackItems.reduce(
         (acc, item) => acc + item.totalQty,
-        0,
+        0
       );
       const partialQty = selectedUnPackItems.reduce(
         (acc, item) => acc + item.partialQty,
-        0,
+        0
       );
 
       const temp = packTableData.filter(
-        (item) => String(item.key) === String(selectedPackItem.key),
+        (item) => String(item.key) === String(selectedPackItem.key)
       );
       temp[0].totalWeight = partialQty;
       temp[0].loadingWeight = totalQty;
 
       const updatedUnpackTableData = unpackTableData.filter(
-        (item) => !selectedRowKeys2.includes(item.key),
+        (item) => !selectedRowKeys2.includes(item.key)
       );
 
       setPackTableData(temp);
@@ -241,25 +70,30 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
     }
   };
 
-  // Function to handle the Unpack operation
   const handleUnpackClick = () => {
-    // Reset pack table data to initial state
     setPackTableData(initialPackTableData);
-    setUnpackTableData(initialUnpackTableData); // Reset unpack table data if needed
-    setShowPackData(false); // Reset showPackData state if needed
+    setUnpackTableData(initialUnpackTableData);
+    setShowPackData(false);
   };
 
-  // Function to handle row selection change for pack table
   const onSelectChange1 = (newSelectedRowKeys) => {
     setSelectedRowKeys1(newSelectedRowKeys);
+
+    // Find the selected row data from filteredPackTableData
+    const selectedRowData = filteredPackTableData.find(
+      (item) => item.key === newSelectedRowKeys[0]
+    );
+
+    // Pass the selected row data to setTemp in the desired structure
+    if (selectedRowData) {
+      setTemp([selectedRowData]); // Wrap the selected row data in an array
+    }
   };
 
-  // Function to handle row selection change for unpack table
   const onSelectChange2 = (newSelectedRowKeys) => {
     setSelectedRowKeys2(newSelectedRowKeys);
   };
 
-  // Row selection configuration for pack and unpack tables
   const rowSelection1 = {
     selectedRowKeys: selectedRowKeys1,
     onChange: onSelectChange1,
@@ -272,9 +106,15 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
 
   return (
     <div>
+      {/* <Input
+        placeholder="Enter SO Number"
+        value={soNumber}
+        onChange={(e) => setSoNumber(e.target.value)}
+      /> */}
+
       {/* Pack table */}
       <Table
-        dataSource={packTableData.map((item) => ({
+        dataSource={filteredPackTableData.map((item) => ({
           ...item,
           totalWeight:
             selectedRowKeys1.includes(item.key) && showPackData
@@ -319,7 +159,9 @@ const PackUnpackModal = ({ getPackTable, setTemp }) => {
 
       {/* Unpack table */}
       <Table
-        dataSource={showPackData ? modifiedUnpackTableData : unpackTableData}
+        dataSource={
+          showPackData ? modifiedUnpackTableData : filteredUnpackTableData
+        }
         columns={unpackColumns}
         pagination={false}
         rowSelection={rowSelection2}

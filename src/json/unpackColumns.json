@@ -1,0 +1,53 @@
+[
+  {
+    "title": "Material",
+    "dataIndex": "material",
+    "key": "material",
+    "width": 120
+  },
+  {
+    "title": "Partial Qty",
+    "dataIndex": "partialQty",
+    "key": "partialQty"
+  },
+  {
+    "title": "Total Qty",
+    "dataIndex": "totalQty",
+    "key": "totalQty"
+  },
+  {
+    "title": "UoM",
+    "dataIndex": "uom",
+    "key": "uom"
+  },
+  {
+    "title": "Plant",
+    "dataIndex": "plant",
+    "key": "plant"
+  },
+  {
+    "title": "StorgL",
+    "dataIndex": "storg",
+    "key": "storg"
+  },
+  {
+    "title": "Dest.Stg.Loc",
+    "dataIndex": "stg",
+    "key": "stg"
+  },
+  {
+    "title": "Document",
+    "dataIndex": "document",
+    "key": "document"
+  },
+  {
+    "title": "Item",
+    "dataIndex": "item",
+    "key": "item"
+  },
+  {
+    "title": "Description",
+    "dataIndex": "desc",
+    "key": "desc"
+  }
+]

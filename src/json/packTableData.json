@@ -1,0 +1,35 @@
+[
+  {
+    "key": "1",
+    "hu": "1000077718",
+    "desc": "CARTON US",
+    "weight": 50,
+    "loadingWeight": 48,
+    "allWeight": "",
+    "tareWeight": 2,
+    "uom": "LB",
+    "volume": 1.57
+  },
+  {
+    "key": "2",
+    "hu": "1000077719",
+    "desc": "CARTON US",
+    "weight": 43,
+    "loadingWeight": 120,
+    "allWeight": "",
+    "tareWeight": 3,
+    "uom": "LB",
+    "volume": 1.47
+  },
+  {
+    "key": "3",
+    "hu": "1000077720",
+    "desc": "CARTON US",
+    "weight": 125,
+    "loadingWeight": 120,
+    "allWeight": "",
+    "tareWeight": 5,
+    "uom": "LB",
+    "volume": 1.87
+  }
+]
