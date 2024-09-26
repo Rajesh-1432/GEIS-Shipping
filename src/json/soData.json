@@ -180,5 +180,57 @@
     "pickqty": 0,
     "batch": "",
     "serial": " "
+  },
+  {
+    "key": "16",
+    "sosto": "150085598",
+    "soline": "10",
+    "poline": "211000000145",
+    "delyline": "10",
+    "material": "THJK436300WLX",
+    "desc": "Miniature Circuit Breaker - S200 30-100A ",
+    "delyqty": 10,
+    "pickqty": 10,
+    "batch": " ",
+    "serial": "CB30L100"
+  },
+  {
+    "key": "17",
+    "sosto": "150085598",
+    "soline": "20",
+    "poline": "211000000145",
+    "delyline": "20",
+    "material": "THJK436800WLY",
+    "desc": "Miniature Circuit Breaker - S200 40-100A ",
+    "delyqty": 5,
+    "pickqty": 5,
+    "batch": " ",
+    "serial": "CB40L100"
+  },
+  {
+    "key": "18",
+    "sosto": "150085598",
+    "soline": "30",
+    "poline": "211000000145",
+    "delyline": "30",
+    "material": "THJK436300WLX",
+    "desc": "Miniature Circuit Breaker - S200 80-100A ",
+    "delyqty": 5,
+    "pickqty": 5,
+    "batch": " ",
+    "serial": "CB80M100"
+  },
+  {
+    "key": "19",
+    "sosto": "150085598",
+    "soline": "40",
+    "poline": "211000000145",
+    "delyline": "40",
+    "material": "THJK436800WWLZ",
+    "desc": "Miniature Circuit Breaker - S200 80-200A ",
+    "delyqty": 5,
+    "pickqty": 5,
+    "batch": " ",
+    "serial": "CB80M200"
   }
 ]

@@ -1,5 +1,6 @@
 import {
   AuditOutlined,
+  BorderTopOutlined,
   DiffOutlined,
   FileAddOutlined,
 } from "@ant-design/icons";
@@ -9,9 +10,12 @@ import {
   DatePicker,
   Input,
   Modal,
+  notification,
   Radio,
+  Space,
   Spin,
   Table,
+  message,
 } from "antd";
 import { useEffect, useState } from "react";
 import PackUnpackModal from "./PackModal";
@@ -30,21 +34,26 @@ const Home = () => {
   const [delivery, setDelivery] = useState("");
 
   const [serviceType, setServiceType] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
-  const [showLtlMessage, setShowLtlMessage] = useState(false);
-  const [message, setMessage] = useState("0");
+  const [showMessages, setShowMessages] = useState(false);
+  const [showLtlMessages, setShowLtlMessages] = useState(false);
+  const [messages, setMessages] = useState("0");
 
   const [dataSource, setDataSource] = useState([]);
   const [filterData, setFilterData] = useState([]);
+
   const [shippingPackTable, setShippingPackTable] = useState([]);
+  const [trackingValue, setTrackingValue] = useState("");
+
   const [temp, setTemp] = useState([]);
   const [ltlInputValue, setLtlInputValue] = useState("");
-  console.log("ltlInputValue: ", ltlInputValue);
-
   const [inputValue, setInputValue] = useState("");
   const [packTableDataFromModal, setPackTableDataFromModal] = useState([]);
+
+  const [updatedDataSource, setUpdatedDataSource] = useState(dataSource);
+
   const handleInput = (e) => {
     setInputValue(e.target.value);
+    setFilterData([]);
   };
   const handleGetPackData = (packData) => {
     setPackTableDataFromModal(packData);
@@ -63,13 +72,13 @@ const Home = () => {
   //       ...recentIds.filter((id) => id !== inputValue).slice(0, 4),
   //     ]); // Limit to 5 recent IDs
   //   } else {
-  //     // If ID is not found, display a message
-  //     message.error({
+  //     // If ID is not found, display a messages
+  //     messages.error({
   //       content: "wrong value!",
   //       key,
   //       duration: 2,
   //     });
-  //     // You can display a message using a notification or set a state to display a message in your UI
+  //     // You can display a messages using a notification or set a state to display a messages in your UI
   //   }
   //   setInputValue(""); // Clear input value after adding row
   // };
@@ -81,6 +90,20 @@ const Home = () => {
       newData[index][dataIndex] = e.target.value;
       setDataSource(newData);
     }
+  };
+
+  const handlePressEnter = (key, dataIndex, newValue) => {
+    const newData = updatedDataSource.map((item) => {
+      if (item.key === key) {
+        return { ...item, [dataIndex]: newValue };
+      }
+      return item;
+    });
+
+    setUpdatedDataSource(newData);
+
+    // Show success messages
+    messages.success("Value updated");
   };
 
   // Step 3: Function to open modal
@@ -184,6 +207,9 @@ const Home = () => {
         <Input
           value={record.pickqty}
           onChange={(e) => handleInputChange(e, record.key, "pickqty")}
+          onPressEnter={(e) =>
+            handlePressEnter(record.key, "pickqty", e.target.value)
+          }
           variant="borderless"
         />
       ),
@@ -258,6 +284,8 @@ const Home = () => {
   };
 
   const key = "updatable";
+  const [messageApi, contextHolder] = message.useMessage();
+
   const handleCreateShpmnt = () => {
     setLoading(true); // Set loading to true when enter is hit
 
@@ -266,10 +294,12 @@ const Home = () => {
         150085599: "801963700",
         150085638: "801963701",
         4700632105: "801963702",
+        150085598: "801963705",
       };
 
       if (validInputs[inputValue]) {
-        const filter = soData.filter((d) => d.sosto === inputValue);
+        // Reset filterData before filtering
+        const filter = soData.filter((d) => d.sosto == inputValue);
         setFilterData(filter);
 
         // Delay the delivery update by an additional 3 seconds
@@ -278,23 +308,26 @@ const Home = () => {
           setLoading(false); // Stop loading after setting delivery
         }, 3000);
       } else {
-        console.log("Invalid input");
+        // Show notification for invalid input
+        messageApi.open({
+          type: "error",
+          content: "Please enter a valid input.",
+        });
         setLoading(false); // Stop loading immediately in the else case
       }
     }, 1000); // Initial 1-second delay for filtering data
   };
-
   useEffect(() => {
     setDataSource(filterData);
   }, [filterData]);
 
   const onDelivered = () => {
-    message.loading({
+    messages.loading({
       content: "Loading...",
       key,
     });
     setTimeout(() => {
-      message.success({
+      messages.success({
         content: "Delivered!",
         key,
         duration: 2,
@@ -302,12 +335,12 @@ const Home = () => {
     }, 1000);
   };
   const onComplete = () => {
-    message.loading({
+    messages.loading({
       content: "Loading...",
       key,
     });
     setTimeout(() => {
-      message.success({
+      messages.success({
         content: "Completed!",
         key,
         duration: 2,
@@ -334,8 +367,19 @@ const Home = () => {
     //   input5: "IND",
     // });
   };
+  // Check if any row has pickqty === 0
   const showModal = () => {
-    setModalVisible(true);
+    const isPickQtyZero = dataSource.some((record) => record.pickqty == 0);
+
+    if (isPickQtyZero) {
+      notification.error({
+        messages: "Error",
+        description: "Pick quantity cannot be zero.",
+      });
+    } else {
+      // Otherwise, show the modal
+      setModalVisible(true);
+    }
   };
 
   // Step 3: Function to close modal
@@ -374,6 +418,8 @@ const Home = () => {
         display: "flex",
       }}
     >
+      {" "}
+      {contextHolder}
       <Modal
         title="Carrier Selection"
         open={isShipModalOpen}
@@ -416,7 +462,6 @@ const Home = () => {
         </div>
       </Modal>
       {/* ltl modal */}
-
       <Modal
         title="Ltl Service"
         open={isShipLtlModalOpen}
@@ -441,10 +486,24 @@ const Home = () => {
               // Perform your save logic here
               setIsShipLtlModalOpen(false);
 
-              // Show message after 1 second
               setTimeout(() => {
-                setMessage("1");
-                setShowLtlMessage(true);
+                if (shippingPackTable.length > 0) {
+                  const updatedTable = shippingPackTable.map((row) => ({
+                    ...row,
+                    tracking: ltlInputValue, // Update tracking for the first row
+                  }));
+
+                  // Update the state with the new data
+                  setShippingPackTable(updatedTable);
+
+                  // Update messages after successful tracking update
+                  setMessages("Tracking value updated successfully!");
+                }
+              }, 5000); // 5 seconds delay
+              // Show messages after 1 second
+              setTimeout(() => {
+                setMessages("1");
+                setShowLtlMessages(true);
               }, 1000);
 
               // Clear the input field after saving
@@ -489,9 +548,9 @@ const Home = () => {
             onClick={() => {
               setIsShipFedexModalOpen(false);
               setTimeout(() => {
-                setMessage("1");
+                setMessages("1");
 
-                setShowMessage(true);
+                setShowMessages(true);
               }, 1000);
             }}
             className="w-full mt-4"
@@ -500,76 +559,76 @@ const Home = () => {
           </Button>
         </div>
       </Modal>
-      {/* ltl modal for message */}
+      {/* ltl modal for messages */}
       <Modal
         title="Ltl Service"
-        open={showLtlMessage}
+        open={showLtlMessages}
         footer={null}
-        onCancel={() => setShowLtlMessage(false)}
+        onCancel={() => setShowLtlMessages(false)}
         width={200}
       >
         <div className="flex flex-col items-center justify-between w-full">
-          {message === "1" && <div>Call to Ltl sever initiated</div>}
-          {message === "2" && "Ltl label printed"}
-          {message === "3" && "Post Good issued"}
+          {messages === "1" && <div>Call to Ltl sever initiated</div>}
+          {messages === "2" && "Ltl label printed"}
+          {messages === "3" && "Post Good issued"}
         </div>
         <Button
           className="w-full mt-4"
           onClick={() => {
-            console.log("message: ", message);
-            if (message === "4") {
+            console.log("messages: ", messages);
+            if (messages === "4") {
               setIsShipLtlModalOpen(false);
               return;
             }
 
-            if (message === "3") {
+            if (messages === "3") {
               setInputValues({
                 input1: "04",
-                input2: ltlInputValue,
+                input2: "UPS",
                 input3: "SE",
                 input4: "45102E",
-                input5: "IND",
+                // input5: "IND",
               });
 
-              setShowLtlMessage(false);
+              setShowLtlMessages(false);
               return;
             }
 
-            setShowLtlMessage(false);
+            setShowLtlMessages(false);
             setTimeout(() => {
-              setShowLtlMessage(true);
-              message == "1" && setMessage("2");
-              message == "2" && setMessage("3");
-              message == "3" && setMessage("4");
+              setShowLtlMessages(true);
+              messages == "1" && setMessages("2");
+              messages == "2" && setMessages("3");
+              messages == "3" && setMessages("4");
             }, 1000);
           }}
         >
           OK
         </Button>
       </Modal>
-      {/* fedex modal for message */}
+      {/* fedex modal for messages */}
       <Modal
         title="Fedex Service"
-        open={showMessage}
+        open={showMessages}
         footer={null}
-        onCancel={() => setShowMessage(false)}
+        onCancel={() => setShowMessages(false)}
         width={200}
       >
         <div className="flex flex-col items-center justify-between w-full">
-          {message === "1" && <div>Call to fedex sever initiated</div>}
-          {message === "2" && "Fedex label printed"}
-          {message === "3" && "Post Good issued"}
+          {messages === "1" && <div>Call to fedex sever initiated</div>}
+          {messages === "2" && "Fedex label printed"}
+          {messages === "3" && "Post Good issued"}
         </div>
         <Button
           className="w-full mt-4"
           onClick={() => {
-            console.log("message: ", message);
-            if (message === "4") {
+            console.log("messages: ", messages);
+            if (messages === "4") {
               setIsShipFedexModalOpen(false);
               return;
             }
 
-            if (message === "3") {
+            if (messages === "3") {
               setInputValues({
                 input1: "04",
                 input2: serviceType,
@@ -578,16 +637,16 @@ const Home = () => {
                 input5: "IND",
               });
 
-              setShowMessage(false);
+              setShowMessages(false);
               return;
             }
 
-            setShowMessage(false);
+            setShowMessages(false);
             setTimeout(() => {
-              setShowMessage(true);
-              message == "1" && setMessage("2");
-              message == "2" && setMessage("3");
-              message == "3" && setMessage("4");
+              setShowMessages(true);
+              messages == "1" && setMessages("2");
+              messages == "2" && setMessages("3");
+              messages == "3" && setMessages("4");
             }, 1000);
           }}
         >
@@ -732,6 +791,7 @@ const Home = () => {
                 />
               </Modal>
             </span>
+
             <span
               style={{
                 display: "flex",
@@ -848,7 +908,7 @@ const Home = () => {
                       >
                         <label htmlFor="input2">Freight Cost</label>{" "}
                         {/* Added label */}
-                        <Input id="input2" defaultValue={234}></Input>{" "}
+                        <Input id="input2" defaultValue={0}></Input>{" "}
                         {/* Added id for linking with label */}
                       </div>
                     </div>
@@ -901,7 +961,7 @@ const Home = () => {
                         justifyContent: "space-around",
                       }}
                     >
-                      {["input1", "input2", "input3", "input4", "input5"].map(
+                      {["input1", "input2", "input3", "input4"].map(
                         (inputId, index) => (
                           <div
                             key={inputId}
@@ -921,7 +981,7 @@ const Home = () => {
                                   "Carrier",
                                   "Service Type",
                                   "Truck ID",
-                                  "Address:",
+                                  // "Address:",
                                 ][index]
                               }
                             </label>
@@ -997,13 +1057,17 @@ const Home = () => {
                     </div>
 
                     <div
+                      className="flex flex-row"
                       style={{
                         borderLeft: "2px solid #ccc",
                         padding: 7,
                         marginLeft: 150,
                       }}
                     >
-                      Ship To
+                      <span className="mt-1">Ship To</span>
+                      <span className="w-28 h-4 ml-2  ">
+                        <Input variant="borderless" className="bg-gray-100" />
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -1014,15 +1078,19 @@ const Home = () => {
                         Gexpro – Woodward Lincoln Campus, Attn: Jay Keller, 5303
                         East 47th Ave STE A, Denver CO 80216, USA
                       </span>
+                    )}{" "}
+                    {inputValue === "150085598" && (
+                      <span>
+                        Gexpro – Woodward Lincoln Campus, Attn: Jay Keller, 5303
+                        East 47th Ave STE A, Denver CO 80216, USA
+                      </span>
                     )}
-
                     {inputValue === "150085638" && (
                       <span>
                         Walmart, Attn: Kathy Jones, Louisville, KY, United
                         States
                       </span>
                     )}
-
                     {inputValue === "4700632105" && (
                       <span>
                         Target Sortation Center, Attn: Louis Pale, 2700 Winter
@@ -1050,6 +1118,23 @@ const Home = () => {
                 {shippingPackTable.length > 0 && (
                   <div>
                     {inputValue === "150085599" && (
+                      <div className="flex flex-col gap-3">
+                        <div>
+                          1. Orders are processed within 1-2 business days.
+                        </div>
+                        <div>
+                          2. Domestic delivery: Standard (3-5 business days),
+                          Expedited (1-3 business days), Overnight (1 business
+                          day).
+                        </div>
+
+                        <div>
+                          3. International delivery: Standard (7-21 business
+                          days), Expedited (5-10 business days).
+                        </div>
+                      </div>
+                    )}
+                    {inputValue === "150085598" && (
                       <div className="flex flex-col gap-3">
                         <div>
                           1. Orders are processed within 1-2 business days.

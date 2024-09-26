@@ -124,5 +124,33 @@
     "item": "10",
     "desc": "Miniature Circuit Breaker - S200 80-200A ",
     "soNumber": 150085599
+  },
+  {
+    "key": "10",
+    "material": "THJK436300WLX",
+    "partialQty": 3,
+    "totalQty": 3,
+    "uom": "EA",
+    "plant": "USW6",
+    "storg": "WHSE",
+    "stg": "",
+    "document": "801963700",
+    "item": "10",
+    "desc": "Miniature Circuit Breaker - S200 30-100A ",
+    "soNumber": 150085598
+  },
+  {
+    "key": "11",
+    "material": "THJK436400WLY",
+    "partialQty": 2,
+    "totalQty": 2,
+    "uom": "EA",
+    "plant": "USW6",
+    "storg": "WHSE",
+    "stg": "",
+    "document": "801963700",
+    "item": "10",
+    "desc": "Miniature Circuit Breaker - S200 40-100A ",
+    "soNumber": 150085598
   }
 ]

@@ -7,32 +7,28 @@ import unpackColumns from "../json/unpackColumns.json";
 
 const PackUnpackModal = ({ getPackTable, setTemp, soNumber }) => {
   console.log("soNumber: ", soNumber);
-  // const [soNumber, setSoNumber] = useState(""); // New state for soNumber input
   const [showPackData, setShowPackData] = useState(false);
   const [selectedRowKeys1, setSelectedRowKeys1] = useState([]);
   const [selectedRowKeys2, setSelectedRowKeys2] = useState([]);
   const [modifiedUnpackTableData, setModifiedUnpackTableData] = useState([]);
   const [packTableData, setPackTableData] = useState(initialPackTableData);
-  console.log("packTableData: ", packTableData);
   const [unpackTableData, setUnpackTableData] = useState(
     initialUnpackTableData
   );
 
   // Filter data based on the entered soNumber
-  const filteredPackTableData = packTableData.filter((item) => {
-    const itemSoNumber = String(item.soNumber);
-    console.log("Current item soNumber:", itemSoNumber);
-    return itemSoNumber === soNumber;
-  });
-  console.log("filteredPackTableData: ", filteredPackTableData);
-  const filteredUnpackTableData = unpackTableData.filter(
-    (item) => String(item.soNumber) == soNumber
+  const filteredPackTableData = packTableData.filter(
+    (item) => String(item.soNumber) === soNumber
   );
-  console.log("filteredUnpackTableData: ", filteredUnpackTableData);
+  const filteredUnpackTableData = unpackTableData.filter(
+    (item) => String(item.soNumber) === soNumber
+  );
+  const filteredModifiedUnpackTableData = modifiedUnpackTableData.filter(
+    (item) => String(item.soNumber) === soNumber
+  );
 
   useEffect(() => {
     getPackTable(filteredPackTableData); // Use filtered data
-    // setTemp(filteredPackTableData);
   }, [filteredPackTableData]);
 
   const handlePackClick = () => {
@@ -53,11 +49,11 @@ const PackUnpackModal = ({ getPackTable, setTemp, soNumber }) => {
         0
       );
 
-      const temp = packTableData.filter(
-        (item) => String(item.key) === String(selectedPackItem.key)
+      const temp = packTableData.map((item) =>
+        String(item.key) === String(selectedPackItem.key)
+          ? { ...item, totalWeight: partialQty, loadingWeight: totalQty }
+          : item
       );
-      temp[0].totalWeight = partialQty;
-      temp[0].loadingWeight = totalQty;
 
       const updatedUnpackTableData = unpackTableData.filter(
         (item) => !selectedRowKeys2.includes(item.key)
@@ -79,14 +75,12 @@ const PackUnpackModal = ({ getPackTable, setTemp, soNumber }) => {
   const onSelectChange1 = (newSelectedRowKeys) => {
     setSelectedRowKeys1(newSelectedRowKeys);
 
-    // Find the selected row data from filteredPackTableData
     const selectedRowData = filteredPackTableData.find(
       (item) => item.key === newSelectedRowKeys[0]
     );
 
-    // Pass the selected row data to setTemp in the desired structure
     if (selectedRowData) {
-      setTemp([selectedRowData]); // Wrap the selected row data in an array
+      setTemp([selectedRowData]);
     }
   };
 
@@ -106,12 +100,6 @@ const PackUnpackModal = ({ getPackTable, setTemp, soNumber }) => {
 
   return (
     <div>
-      {/* <Input
-        placeholder="Enter SO Number"
-        value={soNumber}
-        onChange={(e) => setSoNumber(e.target.value)}
-      /> */}
-
       {/* Pack table */}
       <Table
         dataSource={filteredPackTableData.map((item) => ({
@@ -143,10 +131,7 @@ const PackUnpackModal = ({ getPackTable, setTemp, soNumber }) => {
         }))}
         columns={packColumns}
         pagination={false}
-        rowSelection={{
-          ...rowSelection1,
-          type: "radio",
-        }}
+        rowSelection={{ ...rowSelection1, type: "radio" }}
       />
 
       {/* Pack and Unpack buttons */}
@@ -160,7 +145,9 @@ const PackUnpackModal = ({ getPackTable, setTemp, soNumber }) => {
       {/* Unpack table */}
       <Table
         dataSource={
-          showPackData ? modifiedUnpackTableData : filteredUnpackTableData
+          showPackData
+            ? filteredModifiedUnpackTableData
+            : filteredUnpackTableData
         }
         columns={unpackColumns}
         pagination={false}

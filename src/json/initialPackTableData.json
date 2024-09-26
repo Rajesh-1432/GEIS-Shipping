@@ -9,7 +9,7 @@
     "tareWeight": 2,
     "unit": "LB",
     "volume": 1.57,
-    "tracking": "794809361804",
+    "tracking": "",
     "soNumber": 150085599
   },
   {
@@ -22,7 +22,7 @@
     "tareWeight": 3,
     "unit": "LB",
     "volume": 1.47,
-    "tracking": "794809361804",
+    "tracking": "",
     "soNumber": 150085599
   },
 
@@ -36,7 +36,7 @@
     "tareWeight": 5,
     "unit": "LB",
     "volume": 1.87,
-    "tracking": "800237890812",
+    "tracking": "",
     "soNumber": 150085638
   },
   {
@@ -49,7 +49,7 @@
     "tareWeight": 5,
     "unit": "LB",
     "volume": 1.87,
-    "tracking": "800237890812",
+    "tracking": "",
     "soNumber": 150085638
   },
   {
@@ -62,7 +62,7 @@
     "tareWeight": 5,
     "unit": "LB",
     "volume": 1.87,
-    "tracking": "800237890812",
+    "tracking": "",
     "soNumber": 150085638
   },
   {
@@ -75,7 +75,33 @@
     "tareWeight": 5,
     "unit": "LB",
     "volume": 1.87,
-    "tracking": "800237890912",
+    "tracking": "",
     "soNumber": 4700632105
+  },
+  {
+    "key": "7",
+    "hu": "1000077718",
+    "desc": "CARTON US",
+    "totalWeight": 50,
+    "loadingWeight": 48,
+    "allWeight": "",
+    "tareWeight": 2,
+    "unit": "LB",
+    "volume": 1.57,
+    "tracking": "",
+    "soNumber": 150085598
+  },
+  {
+    "key": "8",
+    "hu": "1000077719",
+    "desc": "CARTON US",
+    "totalWeight": 43,
+    "loadingWeight": 40,
+    "allWeight": "",
+    "tareWeight": 3,
+    "unit": "LB",
+    "volume": 1.47,
+    "tracking": "",
+    "soNumber": 150085598
   }
 ]
