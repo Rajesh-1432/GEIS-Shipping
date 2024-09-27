@@ -127,7 +127,7 @@
     "delyqty": 5,
     "pickqty": 0,
     "batch": "0000000028",
-    "serial": " "
+    "serial": ""
   },
   {
     "key": "12",
@@ -140,7 +140,7 @@
     "delyqty": 5,
     "pickqty": 0,
     "batch": "0000000023",
-    "serial": " "
+    "serial": ""
   },
   {
     "key": "13",
@@ -153,7 +153,7 @@
     "delyqty": 5,
     "pickqty": 0,
     "batch": "",
-    "serial": " "
+    "serial": ""
   },
   {
     "key": "14",
@@ -166,7 +166,7 @@
     "delyqty": 3,
     "pickqty": 0,
     "batch": "",
-    "serial": " "
+    "serial": ""
   },
   {
     "key": "15",
@@ -179,7 +179,7 @@
     "delyqty": 3,
     "pickqty": 0,
     "batch": "",
-    "serial": " "
+    "serial": ""
   },
   {
     "key": "16",

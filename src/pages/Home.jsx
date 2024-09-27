@@ -51,13 +51,20 @@ const Home = () => {
 
   const [updatedDataSource, setUpdatedDataSource] = useState(dataSource);
 
+  const [shiptoInput, setShiptoInput] = useState("");
+  useEffect(() => {
+    if (shippingPackTable.length > 0) {
+      setShiptoInput("1200"); // Set the value to 1200 when shippingPackTable has data
+    }
+  }, [shippingPackTable]);
+
   const handleInput = (e) => {
     setInputValue(e.target.value);
     setFilterData([]);
   };
   const handleGetPackData = (packData) => {
     setPackTableDataFromModal(packData);
-    console.log("Pack table data received in parent:", packData);
+    // console.log("Pack table data received in parent:", packData);
   };
   // const handleAddRow = () => {
   //   // Search for a row in your data based on the SO/STO/ETO ID entered
@@ -219,13 +226,13 @@ const Home = () => {
       title: "Batch",
       dataIndex: "batch",
       key: "batch",
-      // render: (text, record) => (
-      //   <Input
-      //     value={record.pickqty}
-      //     onChange={(e) => handleInputChange(e, record.key, "pickqty")}
-      //     variant="borderless"
-      //   />
-      // ),
+      render: (text, record) => (
+        <Input
+          value={record.batch}
+          onChange={(e) => handleInputChange(e, record.key, "batch")}
+          variant="borderless"
+        />
+      ),
     },
     {
       title: "Serial",
@@ -368,18 +375,43 @@ const Home = () => {
     // });
   };
   // Check if any row has pickqty === 0
+
   const showModal = () => {
+    // Check if any record has pickqty == 0
     const isPickQtyZero = dataSource.some((record) => record.pickqty == 0);
+    console.log("Checking if any pickqty is 0:", isPickQtyZero);
 
     if (isPickQtyZero) {
       notification.error({
-        messages: "Error",
+        message: "Error",
         description: "Pick quantity cannot be zero.",
       });
-    } else {
-      // Otherwise, show the modal
-      setModalVisible(true);
+      return; // Exit early if pickqty is zero
     }
+
+    // Now that pickqty is valid, check serial and batch
+    const isBatchAndSerialEmpty = dataSource.some(
+      (record) => !record.serial && !record.batch
+    );
+    console.log("dataSource: ", dataSource);
+
+    console.log(
+      "Checking if both serial and batch are empty:",
+      isBatchAndSerialEmpty
+    );
+
+    // Show warning if both serial and batch are empty
+    if (isBatchAndSerialEmpty) {
+      notification.error({
+        message: "Error",
+        description: " Please enter the Batch",
+      });
+      return; // Exit early if both serial and batch are empty
+    }
+
+    // If either serial or batch is provided, show the modal
+    console.log("Modal will be visible now");
+    setModalVisible(true);
   };
 
   // Step 3: Function to close modal
@@ -484,27 +516,27 @@ const Home = () => {
           <Button
             onClick={(e) => {
               // Perform your save logic here
-              setIsShipLtlModalOpen(false);
 
-              setTimeout(() => {
-                if (shippingPackTable.length > 0) {
-                  const updatedTable = shippingPackTable.map((row) => ({
-                    ...row,
-                    tracking: ltlInputValue, // Update tracking for the first row
-                  }));
+              // setTimeout(() => {
+              if (shippingPackTable.length > 0) {
+                const updatedTable = shippingPackTable.map((row) => ({
+                  ...row,
+                  tracking: ltlInputValue, // Update tracking for the first row
+                }));
 
-                  // Update the state with the new data
-                  setShippingPackTable(updatedTable);
+                //     // Update the state with the new data
+                setShippingPackTable(updatedTable);
 
-                  // Update messages after successful tracking update
-                  setMessages("Tracking value updated successfully!");
-                }
-              }, 5000); // 5 seconds delay
+                //     // Update messages after successful tracking update
+                //     setMessages("Tracking value updated successfully!");
+              }
+              // }, 5000); // 5 seconds delay
               // Show messages after 1 second
               setTimeout(() => {
                 setMessages("1");
                 setShowLtlMessages(true);
               }, 1000);
+              setIsShipLtlModalOpen(false);
 
               // Clear the input field after saving
               // setLtlInputValue("");
@@ -1065,8 +1097,12 @@ const Home = () => {
                       }}
                     >
                       <span className="mt-1">Ship To</span>
-                      <span className="w-28 h-4 ml-2  ">
-                        <Input variant="borderless" className="bg-gray-100" />
+                      <span className="w-28  ml-2  ">
+                        <Input
+                          variant="borderless"
+                          className="bg-gray-100"
+                          value={shiptoInput}
+                        />
                       </span>
                     </div>
                   </div>

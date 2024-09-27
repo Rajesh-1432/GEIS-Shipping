@@ -6,7 +6,7 @@ import packColumns from "../json/packColumns.json";
 import unpackColumns from "../json/unpackColumns.json";
 
 const PackUnpackModal = ({ getPackTable, setTemp, soNumber }) => {
-  console.log("soNumber: ", soNumber);
+  // console.log("soNumber: ", soNumber);
   const [showPackData, setShowPackData] = useState(false);
   const [selectedRowKeys1, setSelectedRowKeys1] = useState([]);
   const [selectedRowKeys2, setSelectedRowKeys2] = useState([]);
