@@ -617,7 +617,7 @@ const Home = () => {
               setInputValues({
                 input1: "04",
                 input2: "UPS",
-                input3: "SE",
+                input3: "Ground",
                 input4: "45102E",
                 // input5: "IND",
               });
@@ -663,9 +663,9 @@ const Home = () => {
             if (messages === "3") {
               setInputValues({
                 input1: "04",
-                input2: serviceType,
-                input3: "SE",
-                input4: "45102E",
+                input2: "FEDEX",
+                input3: serviceType,
+                input4: "5020F",
                 input5: "IND",
               });
 
